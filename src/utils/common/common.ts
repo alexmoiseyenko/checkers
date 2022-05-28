@@ -1,4 +1,5 @@
 import { PieceColor, PieceState } from "../consts/Piece";
+import {ICell} from "../../interfaces/interfaces";
 
 const getBoard = (size: number) => {
     const board = [];
@@ -28,6 +29,18 @@ const getBoard = (size: number) => {
     }
 
     return board;
-}
+};
 
-export default getBoard;
+const isMinePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
+    return currentPiece.piece?.color === selectedPiece.piece?.color;
+};
+
+const isSamePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
+    return currentPiece.row === selectedPiece.row && currentPiece.col === selectedPiece.col;
+};
+
+export {
+    getBoard,
+    isMinePiece,
+    isSamePiece
+};

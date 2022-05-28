@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import getBoard from "../../utils/common/common";
+import {getBoard, isMinePiece, isSamePiece} from "../../utils/common/common";
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
 import {ICell} from "../../interfaces/interfaces";
@@ -55,28 +55,37 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
     const onCellClick = (cell: ICell): void => {
         if (cell.piece && !selectedPiece) {
             setSelectedPiece(cell);
-        } else if (cell.isBlackCell && selectedPiece && canMove(cell)) {
-            const newBoard = Object.assign(board);
-            const oldPosition = newBoard.findIndex((item: ICell) => (
-                item.row === selectedPiece?.row && item.col === selectedPiece?.col)
-            );
-            const newPosition = newBoard.findIndex((item: ICell) => (
-                item.row === cell?.row && item.col === cell?.col)
-            );
+        } else if (cell.isBlackCell && selectedPiece) {
+            if (isMinePiece(cell, selectedPiece)) {
+                if (isSamePiece(cell, selectedPiece)) {
+                    setSelectedPiece(undefined);
+                } else {
+                    setSelectedPiece(cell);
+                }
+            } else if (canMove(cell)) {
+                const newBoard = Object.assign(board);
+                const oldPosition = newBoard.findIndex((item: ICell) => (
+                    item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+                );
+                const newPosition = newBoard.findIndex((item: ICell) => (
+                    item.row === cell?.row && item.col === cell?.col)
+                );
 
-            newBoard[newPosition] = {
-                ...newBoard[newPosition],
-                piece: newBoard[oldPosition].piece,
-            };
+                newBoard[newPosition] = {
+                    ...newBoard[newPosition],
+                    piece: newBoard[oldPosition].piece,
+                };
 
-            newBoard[oldPosition] = {
-                ...newBoard[oldPosition],
-                piece: null,
-            };
+                newBoard[oldPosition] = {
+                    ...newBoard[oldPosition],
+                    piece: null,
+                };
 
-            setBoard(newBoard);
-            setSelectedPiece(undefined);
-            setUpdateBoard(!updateBoard);
+                setBoard(newBoard);
+                setSelectedPiece(undefined);
+                setUpdateBoard(!updateBoard);
+            }
+
         }
     };
 
@@ -87,6 +96,8 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
         for (let cell = 0; cell < board.length; cell++) {
             const currentCell = board[cell];
             const { row, col, isBlackCell, piece } = currentCell;
+
+            const isActiveCell = row === selectedPiece?.row && col === selectedPiece.col;
             cells.push(
                 <div
                     onClick={() => onCellClick(currentCell)}
@@ -98,6 +109,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     className={clsx(
                         styles.cell,
                         {[styles.cell_black]: isBlackCell},
+                        {[styles.cell_active]: isActiveCell},
                     )}
                 >
                     {piece ?
