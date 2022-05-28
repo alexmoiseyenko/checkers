@@ -1,15 +1,23 @@
 import React from "react";
 import styles from "./Piece.module.scss";
-import {PieceColor, PieceState} from "../../../utils/consts/Piece";
+import {PieceColor, PieceState} from "../../utils/consts/Piece";
 
 interface IPiece {
-    color: PieceColor,
-    state: PieceState,
+    row?: number;
+    col?: number;
+    color?: PieceColor,
+    state?: PieceState,
+    onClick?: (e: any) => void;
 }
 
-const Piece = (): JSX.Element => {
+const Piece: React.FC<IPiece> = (props): JSX.Element => {
+    const { col, row, onClick } = props;
     return (
-        <div className={styles.piece}>
+        <div
+            data-row={row}
+            data-col={col}
+            className={styles.piece}
+            onClick={onClick}>
             <div className={styles.pieceBorder}>
 
             </div>
