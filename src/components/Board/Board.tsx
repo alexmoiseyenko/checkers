@@ -2,22 +2,11 @@ import React, { useState } from "react";
 import getBoard from "../../utils/common/common";
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
-import { PieceColor, PieceState } from "../../utils/consts/Piece";
+import {ICell} from "../../interfaces/interfaces";
+import clsx from "clsx";
 
-interface IBoard {
+export interface IBoard {
     size?: number;
-}
-
-interface IPiece {
-    state: PieceState,
-    color: PieceColor,
-}
-
-interface ICell {
-    row: number;
-    col: number;
-    isBlackCell: boolean;
-    piece: IPiece | null;
 }
 
 const BOARD_SIZE = 8;
@@ -60,21 +49,22 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             cells.push(
                 <div
                     onClick={() => onCellClick(currentCell)}
-                    data-cell-row={row}
-                    data-cell-col={col}
+                    data-cell={`row-${row} col-${col}`}
                     style={{
                         top: `${rowPosition}px`,
                         left: `${colPosition}px`,
-                        backgroundColor: isBlackCell ? "#000" : "#fff",
                     }}
-                    className={styles.boardCell}
+                    className={clsx(
+                        styles.cell,
+                        {[styles.cell_black]: isBlackCell},
+                    )}
                 >
                     {piece ?
                         <div style={{ color: "white" }}>
                             idx: {cell}
                             <Piece
-                                col={col}
-                                row={row}
+                                color={piece.color}
+                                state={piece.state}
                             />
                         </div>
                         :

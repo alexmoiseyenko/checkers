@@ -2,11 +2,17 @@
   position: relative;
 }
 
-.boardCell {
+.cell {
   position: absolute;
   width: 100px;
   height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #fff;
+}
+
+.cell_black {
+  background-color: #000;
+  cursor: pointer;
 }

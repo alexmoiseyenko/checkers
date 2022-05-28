@@ -4,14 +4,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: black;
-  border: 2px solid white;
+  background: #000;
+  border: 2px solid #fff;
   border-radius: 50%;
 }
 
+.piece_white {
+  background: #fff;
+  border: 2px solid #000;
+}
+
 .pieceBorder {
-  border: 2px solid white;
+  border: 2px solid #fff;
   border-radius: 50%;
   height: 60px;
   width: 60px;
+}
+
+.pieceBorder_white {
+  border: 2px solid #000;
 }
