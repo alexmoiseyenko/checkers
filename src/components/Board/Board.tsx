@@ -18,10 +18,44 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
 
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
 
+    const canMove = (cell: ICell): boolean => {
+        if (!selectedPiece?.piece) {
+            return false;
+        }
+
+        if (cell.piece) {
+            return false;
+        }
+
+        const currentPosition = board.findIndex((item: ICell) => (
+            item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+        );
+
+        const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
+        const topRightCellPos = currentPosition - BOARD_SIZE + 1;
+        const bottomLeftCellPos = currentPosition + BOARD_SIZE - 1;
+        const bottomRightCellPos = currentPosition + BOARD_SIZE + 1;
+
+        const allowedPositions: number[] =
+            [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+
+        const cellPosition = board.findIndex((item: ICell) => (
+            item.row === cell?.row && item.col === cell?.col)
+        );
+
+        // const direction = cellPosition - currentPosition;
+
+        // if (cell?.piece?.state && selectedPiece?.piece.state !== cell?.piece.state) {
+        //     canMove(board[cellPosition + direction])
+        // }
+
+        return allowedPositions.includes(cellPosition);
+    }
+
     const onCellClick = (cell: ICell): void => {
         if (cell.piece && !selectedPiece) {
             setSelectedPiece(cell);
-        } else if (cell.isBlackCell && selectedPiece) {
+        } else if (cell.isBlackCell && selectedPiece && canMove(cell)) {
             const newBoard = Object.assign(board);
             const oldPosition = newBoard.findIndex((item: ICell) => (
                 item.row === selectedPiece?.row && item.col === selectedPiece?.col)
