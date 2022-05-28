@@ -30,8 +30,15 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                 item.row === cell?.row && item.col === cell?.col)
             );
 
-            newBoard[oldPosition] = { ...newBoard[oldPosition], piece: 0 };
-            newBoard[newPosition] = { ...newBoard[newPosition], piece: 1 };
+            newBoard[newPosition] = {
+                ...newBoard[newPosition],
+                piece: newBoard[oldPosition].piece,
+            };
+
+            newBoard[oldPosition] = {
+                ...newBoard[oldPosition],
+                piece: null,
+            };
 
             setBoard(newBoard);
             setSelectedPiece(undefined);
