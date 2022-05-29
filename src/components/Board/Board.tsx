@@ -50,6 +50,39 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
         // }
 
         return allowedPositions.includes(cellPosition);
+    };
+
+    const canBeat = (cell: ICell): boolean => {
+        if (!selectedPiece?.piece) {
+            return false;
+        }
+
+        const currentPosition = board.findIndex((item: ICell) => (
+            item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+        );
+
+        const cellPosition = board.findIndex((item: ICell) => (
+            item.row === cell?.row && item.col === cell?.col)
+        );
+
+        const topLeftCellPos = currentPosition - ((BOARD_SIZE - 1) * 2);
+        const topRightCellPos = currentPosition - ((BOARD_SIZE + 1) * 2);
+        const bottomLeftCellPos = currentPosition + ((BOARD_SIZE - 1) * 2);
+        const bottomRightCellPos = currentPosition + ((BOARD_SIZE + 1) * 2);
+
+        const allowedPositions: number[] =
+            [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+
+        if (!allowedPositions.includes(cellPosition)) {
+            return false;
+        }
+
+        const direction = (cellPosition - currentPosition) / 2;
+
+        const isPiece = board[cellPosition]?.piece;
+        const pieceBetween = currentPosition + direction;
+
+        return !isPiece && !isMinePiece(cell, board[pieceBetween]);
     }
 
     const onCellClick = (cell: ICell): void => {
@@ -84,8 +117,36 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                 setBoard(newBoard);
                 setSelectedPiece(undefined);
                 setUpdateBoard(!updateBoard);
-            }
+            } else if (canBeat(cell)) {
+                const newBoard = Object.assign(board);
+                const oldPosition = newBoard.findIndex((item: ICell) => (
+                    item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+                );
+                const newPosition = newBoard.findIndex((item: ICell) => (
+                    item.row === cell?.row && item.col === cell?.col)
+                );
 
+                const positionBetween = newPosition - ((newPosition - oldPosition) / 2);
+
+                newBoard[newPosition] = {
+                    ...newBoard[newPosition],
+                    piece: newBoard[oldPosition].piece,
+                };
+
+                newBoard[oldPosition] = {
+                    ...newBoard[oldPosition],
+                    piece: null,
+                };
+
+                newBoard[positionBetween] = {
+                    ...newBoard[positionBetween],
+                    piece: null,
+                };
+
+                setBoard(newBoard);
+                setSelectedPiece(undefined);
+                setUpdateBoard(!updateBoard);
+            }
         }
     };
 
