@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {getBoard, isMinePiece, isSamePiece} from "../../utils/common/common";
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
 import {ICell} from "../../interfaces/interfaces";
 import clsx from "clsx";
+import {PieceColor, PieceState} from "../../utils/consts/Piece";
 
 export interface IBoard {
     size?: number;
@@ -31,23 +32,33 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             item.row === selectedPiece?.row && item.col === selectedPiece?.col)
         );
 
-        const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
-        const topRightCellPos = currentPosition - BOARD_SIZE + 1;
-        const bottomLeftCellPos = currentPosition + BOARD_SIZE - 1;
-        const bottomRightCellPos = currentPosition + BOARD_SIZE + 1;
+        let allowedPositions: number[] = [];
 
-        const allowedPositions: number[] =
-            [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+        if (selectedPiece.piece.state === PieceState.Man) {
+            if (selectedPiece.piece.color === PieceColor.White) {
+                const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
+                const topRightCellPos = currentPosition - BOARD_SIZE + 1;
+
+                allowedPositions = [topLeftCellPos, topRightCellPos];
+            } else if (selectedPiece.piece.color === PieceColor.Black) {
+                const bottomLeftCellPos = currentPosition + BOARD_SIZE - 1;
+                const bottomRightCellPos = currentPosition + BOARD_SIZE + 1;
+
+                allowedPositions = [bottomLeftCellPos, bottomRightCellPos];
+            }
+        } else if (selectedPiece.piece.state === PieceState.King) {
+            const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
+            const topRightCellPos = currentPosition - BOARD_SIZE + 1;
+            const bottomLeftCellPos = currentPosition + BOARD_SIZE - 1;
+            const bottomRightCellPos = currentPosition + BOARD_SIZE + 1;
+
+            allowedPositions =
+                [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+        }
 
         const cellPosition = board.findIndex((item: ICell) => (
             item.row === cell?.row && item.col === cell?.col)
         );
-
-        // const direction = cellPosition - currentPosition;
-
-        // if (cell?.piece?.state && selectedPiece?.piece.state !== cell?.piece.state) {
-        //     canMove(board[cellPosition + direction])
-        // }
 
         return allowedPositions.includes(cellPosition);
     };
