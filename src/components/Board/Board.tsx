@@ -34,6 +34,10 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
 
         let allowedPositions: number[] = [];
 
+        const cellPosition = board.findIndex((item: ICell) => (
+            item.row === cell?.row && item.col === cell?.col)
+        );
+
         if (selectedPiece.piece.state === PieceState.Man) {
             if (selectedPiece.piece.color === PieceColor.White) {
                 const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
@@ -46,21 +50,31 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
 
                 allowedPositions = [bottomLeftCellPos, bottomRightCellPos];
             }
-        } else if (selectedPiece.piece.state === PieceState.King) {
-            const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
-            const topRightCellPos = currentPosition - BOARD_SIZE + 1;
-            const bottomLeftCellPos = currentPosition + BOARD_SIZE - 1;
-            const bottomRightCellPos = currentPosition + BOARD_SIZE + 1;
 
-            allowedPositions =
-                [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+            return allowedPositions.includes(cellPosition);
+        } else if (selectedPiece.piece.state === PieceState.King) {
+            const cellDifference = Math.abs(cell.row - selectedPiece.row);
+            const direction = (cellPosition - currentPosition) / cellDifference;
+            let allowedPosition = currentPosition + direction;
+
+            if (![9, 7].includes(Math.abs(direction))) {
+                return false;
+            }
+
+            for (let i = 0; i < cellDifference; i++) {
+                allowedPositions.push(allowedPosition);
+
+                if (board[allowedPosition].piece) {
+                    return false;
+                }
+
+                allowedPosition += direction;
+            }
+
+            return allowedPositions.includes(cellPosition);
         }
 
-        const cellPosition = board.findIndex((item: ICell) => (
-            item.row === cell?.row && item.col === cell?.col)
-        );
-
-        return allowedPositions.includes(cellPosition);
+        return false;
     };
 
     const canBeat = (cell: ICell): boolean => {
@@ -179,6 +193,16 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     piece: null,
                 };
 
+                if (selectedPiece.piece?.state !== PieceState.King && isShouldBecomeKing(cell)) {
+                    newBoard[newPosition] = {
+                        ...newBoard[newPosition],
+                        piece: {
+                            ...newBoard[newPosition].piece,
+                            state: PieceState.King
+                        },
+                    };
+                }
+
                 setBoard(newBoard);
                 setSelectedPiece(undefined);
                 setUpdateBoard(!updateBoard);
@@ -212,6 +236,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     {piece ?
                         <div style={{ color: "white" }}>
                             idx: {cell}
+                            row: {row}
                             state: {piece.state}
                             <Piece
                                 color={piece.color}
@@ -221,6 +246,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                         :
                         <div style={{ color: "white" }}>
                             idx: {cell}
+                            row: {row}
                         </div>
                     }
                 </div>
