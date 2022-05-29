@@ -94,6 +94,21 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
         const pieceBetween = currentPosition + direction;
 
         return !isPiece && !isMinePiece(cell, board[pieceBetween]);
+    };
+
+    const isShouldBecomeKing = (cell: ICell): boolean => {
+        if (!selectedPiece) {
+            return false;
+        }
+        if (cell.row === 0 && selectedPiece.piece?.color === PieceColor.White) {
+            return true;
+        }
+
+        if (cell.row === BOARD_SIZE - 1 && selectedPiece.piece?.color === PieceColor.Black) {
+            return true;
+        }
+
+        return false;
     }
 
     const onCellClick = (cell: ICell): void => {
@@ -124,6 +139,16 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     ...newBoard[oldPosition],
                     piece: null,
                 };
+
+                if (selectedPiece.piece?.state !== PieceState.King && isShouldBecomeKing(cell)) {
+                    newBoard[newPosition] = {
+                        ...newBoard[newPosition],
+                        piece: {
+                            ...newBoard[newPosition].piece,
+                            state: PieceState.King
+                        },
+                    };
+                }
 
                 setBoard(newBoard);
                 setSelectedPiece(undefined);
@@ -187,6 +212,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     {piece ?
                         <div style={{ color: "white" }}>
                             idx: {cell}
+                            state: {piece.state}
                             <Piece
                                 color={piece.color}
                                 state={piece.state}

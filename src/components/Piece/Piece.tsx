@@ -2,7 +2,8 @@ import React from "react";
 import styles from "./Piece.module.scss";
 import {IPiece} from "../../interfaces/interfaces";
 import clsx from "clsx";
-import {PieceColor} from "../../utils/consts/Piece";
+import {PieceColor, PieceState} from "../../utils/consts/Piece";
+import Crown from "../Crown/Crown";
 
 const Piece: React.FC<IPiece> = (props): JSX.Element => {
     const { color, state } = props;
@@ -14,7 +15,11 @@ const Piece: React.FC<IPiece> = (props): JSX.Element => {
             <div className={clsx(
                 styles.pieceBorder,
                 {[styles.pieceBorder_white]: color === PieceColor.White},
-            )} />
+            )}>
+                {state === PieceState.King && (
+                    <Crown width={30} height={30} fill={color === PieceColor.Black ? "#fff" : "#000"} />
+                )}
+            </div>
         </div>
     );
 };
