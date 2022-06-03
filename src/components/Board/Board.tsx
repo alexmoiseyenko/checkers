@@ -62,6 +62,9 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             }
 
             for (let i = 0; i < cellDifference; i++) {
+                if (board[allowedPosition].piece) {
+                    return false;
+                }
                 allowedPositions.push(allowedPosition);
 
                 if (board[allowedPosition].piece) {
@@ -86,28 +89,46 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             item.row === selectedPiece?.row && item.col === selectedPiece?.col)
         );
 
+        let allowedPositions: number[] = [];
+
         const cellPosition = board.findIndex((item: ICell) => (
             item.row === cell?.row && item.col === cell?.col)
         );
 
-        const topLeftCellPos = currentPosition - ((BOARD_SIZE - 1) * 2);
-        const topRightCellPos = currentPosition - ((BOARD_SIZE + 1) * 2);
-        const bottomLeftCellPos = currentPosition + ((BOARD_SIZE - 1) * 2);
-        const bottomRightCellPos = currentPosition + ((BOARD_SIZE + 1) * 2);
+        if (selectedPiece.piece.state === PieceState.Man) {
+            const topLeftCellPos = currentPosition - ((BOARD_SIZE - 1) * 2);
+            const topRightCellPos = currentPosition - ((BOARD_SIZE + 1) * 2);
+            const bottomLeftCellPos = currentPosition + ((BOARD_SIZE - 1) * 2);
+            const bottomRightCellPos = currentPosition + ((BOARD_SIZE + 1) * 2);
 
-        const allowedPositions: number[] =
-            [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+            const allowedPositions: number[] =
+                [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
 
-        if (!allowedPositions.includes(cellPosition)) {
-            return false;
+            if (!allowedPositions.includes(cellPosition)) {
+                return false;
+            }
+
+            const direction = (cellPosition - currentPosition) / 2;
+
+            const isPiece = board[cellPosition]?.piece;
+            const pieceBetween = currentPosition + direction;
+
+            return !isPiece && !isMinePiece(cell, board[pieceBetween]);
+        } else if (selectedPiece.piece.state === PieceState.King) {
+            const cellDifference = Math.abs(cell.row - selectedPiece.row);
+            const direction = (cellPosition - currentPosition) / cellDifference;
+
+            if (![9, 7].includes(Math.abs(direction))) {
+                return false;
+            }
+
+            const isPiece = board[cellPosition]?.piece;
+            const pieceBetween = cellPosition - direction;
+
+            return !isPiece && !isMinePiece(cell, board[pieceBetween]);
         }
 
-        const direction = (cellPosition - currentPosition) / 2;
-
-        const isPiece = board[cellPosition]?.piece;
-        const pieceBetween = currentPosition + direction;
-
-        return !isPiece && !isMinePiece(cell, board[pieceBetween]);
+        return false;
     };
 
     const isShouldBecomeKing = (cell: ICell): boolean => {
@@ -118,11 +139,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             return true;
         }
 
-        if (cell.row === BOARD_SIZE - 1 && selectedPiece.piece?.color === PieceColor.Black) {
-            return true;
-        }
-
-        return false;
+        return cell.row === BOARD_SIZE - 1 && selectedPiece.piece?.color === PieceColor.Black;
     }
 
     const onCellClick = (cell: ICell): void => {
@@ -176,30 +193,61 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     item.row === cell?.row && item.col === cell?.col)
                 );
 
-                const positionBetween = newPosition - ((newPosition - oldPosition) / 2);
+                if (selectedPiece?.piece?.state === PieceState.Man) {
+                    const positionBetween = newPosition - ((newPosition - oldPosition) / 2);
 
-                newBoard[newPosition] = {
-                    ...newBoard[newPosition],
-                    piece: newBoard[oldPosition].piece,
-                };
-
-                newBoard[oldPosition] = {
-                    ...newBoard[oldPosition],
-                    piece: null,
-                };
-
-                newBoard[positionBetween] = {
-                    ...newBoard[positionBetween],
-                    piece: null,
-                };
-
-                if (selectedPiece.piece?.state !== PieceState.King && isShouldBecomeKing(cell)) {
                     newBoard[newPosition] = {
                         ...newBoard[newPosition],
-                        piece: {
-                            ...newBoard[newPosition].piece,
-                            state: PieceState.King
-                        },
+                        piece: newBoard[oldPosition].piece,
+                    };
+
+                    newBoard[oldPosition] = {
+                        ...newBoard[oldPosition],
+                        piece: null,
+                    };
+
+                    newBoard[positionBetween] = {
+                        ...newBoard[positionBetween],
+                        piece: null,
+                    };
+
+                    if (isShouldBecomeKing(cell)) {
+                        newBoard[newPosition] = {
+                            ...newBoard[newPosition],
+                            piece: {
+                                ...newBoard[newPosition].piece,
+                                state: PieceState.King
+                            },
+                        };
+                    }
+                } else if (selectedPiece?.piece?.state === PieceState.King) {
+                    const currentPosition = board.findIndex((item: ICell) => (
+                        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+                    );
+
+                    const cellPosition = board.findIndex((item: ICell) => (
+                        item.row === cell?.row && item.col === cell?.col)
+                    );
+
+
+                    const cellDifference = Math.abs(cell.row - selectedPiece.row);
+                    const direction = (cellPosition - currentPosition) / cellDifference;
+
+                    const positionBetween = cellPosition - direction;
+
+                    newBoard[newPosition] = {
+                        ...newBoard[newPosition],
+                        piece: newBoard[oldPosition].piece,
+                    };
+
+                    newBoard[oldPosition] = {
+                        ...newBoard[oldPosition],
+                        piece: null,
+                    };
+
+                    newBoard[positionBetween] = {
+                        ...newBoard[positionBetween],
+                        piece: null,
                     };
                 }
 
