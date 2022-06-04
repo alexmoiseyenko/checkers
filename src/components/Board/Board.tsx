@@ -18,6 +18,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
+    const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
 
     const onCellClick = (cell: ICell): void => {
         if (cell.piece && !selectedPiece) {
@@ -25,7 +26,79 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                 setSelectedPiece(cell);
             }
         } else if (cell.isBlackCell && selectedPiece) {
-            if (isMinePiece(cell, selectedPiece)) {
+            if (canBeatAgain) {
+                if (canBeat(selectedPiece, cell, board)) {
+                    setCanBeatAgain(false);
+                    const newBoard = Object.assign(board);
+                    const oldPosition = newBoard.findIndex((item: ICell) => (
+                        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+                    );
+                    const newPosition = newBoard.findIndex((item: ICell) => (
+                        item.row === cell?.row && item.col === cell?.col)
+                    );
+
+                    const positionBetween = newPosition - ((newPosition - oldPosition) / 2);
+
+                    newBoard[newPosition] = {
+                        ...newBoard[newPosition],
+                        piece: newBoard[oldPosition].piece,
+                    };
+
+                    newBoard[oldPosition] = {
+                        ...newBoard[oldPosition],
+                        piece: null,
+                    };
+
+                    newBoard[positionBetween] = {
+                        ...newBoard[positionBetween],
+                        piece: null,
+                    };
+
+                    if (isShouldBecomeKing(selectedPiece, cell)) {
+                        newBoard[newPosition] = {
+                            ...newBoard[newPosition],
+                            piece: {
+                                ...newBoard[newPosition].piece,
+                                state: PieceState.King
+                            },
+                        };
+                    }
+
+                    let allowedPositions;
+
+                    const topLeftCellPos = newPosition - BOARD_SIZE - 1;
+                    const topRightCellPos = newPosition - BOARD_SIZE + 1;
+                    const bottomLeftCellPos = newPosition + BOARD_SIZE - 1;
+                    const bottomRightCellPos = newPosition + BOARD_SIZE + 1;
+
+                    allowedPositions = [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+
+                    setBoard(newBoard);
+
+                    setUpdateBoard(!updateBoard);
+
+                    let canBeatAgain = false;
+
+                    for (let i = 0; i < allowedPositions.length; i++) {
+                        if (canBeat(cell, board[allowedPositions[i]], board)) {
+                            setCanBeatAgain(true);
+                            setSelectedPiece(cell);
+                            canBeatAgain = true;
+                            return;
+                        }
+                    }
+
+                    if (!canBeatAgain) {
+                        setSelectedPiece(undefined);
+
+                        if (activeSide === PieceColor.White) {
+                            setActiveSide(PieceColor.Black);
+                        } else {
+                            setActiveSide(PieceColor.White);
+                        }
+                    }
+                }
+            } else if (isMinePiece(cell, selectedPiece)) {
                 if (isSamePiece(cell, selectedPiece)) {
                     setSelectedPiece(undefined);
                 } else {
@@ -138,14 +211,38 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     };
                 }
 
+                let allowedPositions;
+
+                const topLeftCellPos = newPosition - (BOARD_SIZE - 1) * 2;
+                const topRightCellPos = newPosition - (BOARD_SIZE + 1) * 2;
+                const bottomLeftCellPos = newPosition + (BOARD_SIZE - 1) * 2;
+                const bottomRightCellPos = newPosition + (BOARD_SIZE + 1) * 2;
+
+                allowedPositions = [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+
                 setBoard(newBoard);
-                setSelectedPiece(undefined);
+
                 setUpdateBoard(!updateBoard);
 
-                if (activeSide === PieceColor.White) {
-                    setActiveSide(PieceColor.Black);
-                } else {
-                    setActiveSide(PieceColor.White);
+                let canBeatAgain = false;
+
+                for (let i = 0; i < allowedPositions.length; i++) {
+                    if (canBeat(newBoard[newPosition], board[allowedPositions[i]], board)) {
+                        setCanBeatAgain(true);
+                        setSelectedPiece(newBoard[newPosition]);
+                        canBeatAgain = true;
+                        return;
+                    }
+                }
+
+                if (!canBeatAgain) {
+                    setSelectedPiece(undefined);
+
+                    if (activeSide === PieceColor.White) {
+                        setActiveSide(PieceColor.Black);
+                    } else {
+                        setActiveSide(PieceColor.White);
+                    }
                 }
             }
         }
