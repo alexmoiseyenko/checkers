@@ -16,11 +16,16 @@ const CELL_SIZE = 100;
 const Board: React.FC<IBoard> = (): JSX.Element => {
     const [selectedPiece, setSelectedPiece] = useState<ICell>();
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
-
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
+
+    const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
 
     const canMove = (cell: ICell): boolean => {
         if (!selectedPiece?.piece) {
+            return false;
+        }
+
+        if (selectedPiece.piece.color !== activeSide) {
             return false;
         }
 
@@ -144,7 +149,9 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
 
     const onCellClick = (cell: ICell): void => {
         if (cell.piece && !selectedPiece) {
-            setSelectedPiece(cell);
+            if (cell.piece.color === activeSide) {
+                setSelectedPiece(cell);
+            }
         } else if (cell.isBlackCell && selectedPiece) {
             if (isMinePiece(cell, selectedPiece)) {
                 if (isSamePiece(cell, selectedPiece)) {
@@ -184,6 +191,11 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                 setBoard(newBoard);
                 setSelectedPiece(undefined);
                 setUpdateBoard(!updateBoard);
+                if (activeSide === PieceColor.White) {
+                    setActiveSide(PieceColor.Black);
+                } else {
+                    setActiveSide(PieceColor.White);
+                }
             } else if (canBeat(cell)) {
                 const newBoard = Object.assign(board);
                 const oldPosition = newBoard.findIndex((item: ICell) => (
@@ -254,6 +266,12 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                 setBoard(newBoard);
                 setSelectedPiece(undefined);
                 setUpdateBoard(!updateBoard);
+
+                if (activeSide === PieceColor.White) {
+                    setActiveSide(PieceColor.Black);
+                } else {
+                    setActiveSide(PieceColor.White);
+                }
             }
         }
     };
@@ -313,7 +331,13 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
 
     return (
         <>
-            {showBoard()}
+            <h2>
+                Whose turn: {activeSide}
+            </h2>
+            <div className={styles.boardWrapper}>
+                {showBoard()}
+            </div>
+
         </>
     )
 };
