@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import {getBoard, isMinePiece, isSamePiece} from "../../utils/common/common";
+import {getBoard} from "../../utils/common/common";
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../../utils/consts/Piece";
 import {BOARD_SIZE} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
-import ShowBoard from "../../utils/board";
+import {isMinePiece, isSamePiece, isShouldBecomeKing} from "../../utils/board/board";
+import ShowBoard from "./ShowBoard";
 
 export interface IBoard {
     size?: number;
@@ -17,17 +18,6 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
-
-    const isShouldBecomeKing = (cell: ICell): boolean => {
-        if (!selectedPiece) {
-            return false;
-        }
-        if (cell.row === 0 && selectedPiece.piece?.color === PieceColor.White) {
-            return true;
-        }
-
-        return cell.row === BOARD_SIZE - 1 && selectedPiece.piece?.color === PieceColor.Black;
-    }
 
     const onCellClick = (cell: ICell): void => {
         if (cell.piece && !selectedPiece) {
@@ -60,7 +50,10 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     piece: null,
                 };
 
-                if (selectedPiece.piece?.state !== PieceState.King && isShouldBecomeKing(cell)) {
+                if (
+                    selectedPiece.piece?.state !== PieceState.King &&
+                    isShouldBecomeKing(selectedPiece, cell)
+                ) {
                     newBoard[newPosition] = {
                         ...newBoard[newPosition],
                         piece: {
@@ -105,7 +98,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                         piece: null,
                     };
 
-                    if (isShouldBecomeKing(cell)) {
+                    if (isShouldBecomeKing(selectedPiece, cell)) {
                         newBoard[newPosition] = {
                             ...newBoard[newPosition],
                             piece: {

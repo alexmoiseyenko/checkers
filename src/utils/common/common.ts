@@ -31,24 +31,6 @@ const getBoard = (size: number) => {
     return board;
 };
 
-const isMinePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
-    return currentPiece.piece?.color === selectedPiece.piece?.color;
-};
-
-const isSamePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
-    return currentPiece.row === selectedPiece.row && currentPiece.col === selectedPiece.col;
-};
-
-const getAllowedDirections = (boardSize: number): number[] => {
-    const firstAllowedDirection = boardSize - 1;
-    const secondAllowedDirection = boardSize + 1;
-
-    return [firstAllowedDirection, secondAllowedDirection];
-}
-
 export {
     getBoard,
-    isMinePiece,
-    isSamePiece,
-    getAllowedDirections,
 };

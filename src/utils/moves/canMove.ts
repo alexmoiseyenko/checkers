@@ -1,7 +1,7 @@
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/Piece";
 import {BOARD_SIZE} from "../consts/board";
-import {getAllowedDirections} from "../common/common";
+import {getAllowedDirections} from "../board/board";
 
 const canMove = (
     currentPiece: ICell,

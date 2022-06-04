@@ -1,9 +1,9 @@
 import clsx from "clsx";
-import styles from "../components/Board/Board.module.scss";
-import Piece from "../components/Piece/Piece";
-import {CELL_SIZE} from "./consts/board";
+import styles from "./Board.module.scss";
+import Piece from "../Piece/Piece";
+import {CELL_SIZE} from "../../utils/consts/board";
 import React from "react";
-import {ICell} from "../interfaces/interfaces";
+import {ICell} from "../../interfaces/interfaces";
 
 interface IShowBoard {
     board: ICell[];
