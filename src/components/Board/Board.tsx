@@ -1,13 +1,11 @@
 import React, {useState} from "react";
 import {getBoard, isMinePiece, isSamePiece} from "../../utils/common/common";
-import styles from "./Board.module.scss";
-import Piece from "../Piece/Piece";
 import {ICell} from "../../interfaces/interfaces";
-import clsx from "clsx";
 import {PieceColor, PieceState} from "../../utils/consts/Piece";
-import {BOARD_SIZE, CELL_SIZE} from "../../utils/consts/board";
+import {BOARD_SIZE} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
+import ShowBoard from "../../utils/board";
 
 export interface IBoard {
     size?: number;
@@ -160,68 +158,16 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
         }
     };
 
-    const cells: JSX.Element[] = [];
-    const showBoard = (): JSX.Element[] => {
-        let colPosition = 0;
-        let rowPosition = 0;
-        for (let cell = 0; cell < board.length; cell++) {
-            const currentCell = board[cell];
-            const { row, col, isBlackCell, piece } = currentCell;
-
-            const isActiveCell = row === selectedPiece?.row && col === selectedPiece.col;
-            cells.push(
-                <div
-                    onClick={() => onCellClick(currentCell)}
-                    data-cell={`row-${row} col-${col}`}
-                    style={{
-                        top: `${rowPosition}px`,
-                        left: `${colPosition}px`,
-                    }}
-                    className={clsx(
-                        styles.cell,
-                        {[styles.cell_black]: isBlackCell},
-                        {[styles.cell_active]: isActiveCell},
-                    )}
-                >
-                    {piece ?
-                        <div style={{ color: "white" }}>
-                            idx: {cell}
-                            row: {row}
-                            state: {piece.state}
-                            <Piece
-                                color={piece.color}
-                                state={piece.state}
-                            />
-                        </div>
-                        :
-                        <div style={{ color: "white" }}>
-                            idx: {cell}
-                            row: {row}
-                        </div>
-                    }
-                </div>
-            );
-
-            if (currentCell.col >= Math.sqrt(board.length) - 1) {
-                colPosition = 0;
-                rowPosition += CELL_SIZE;
-            } else {
-                colPosition += CELL_SIZE;
-            }
-        }
-
-        return cells;
-    };
-
     return (
         <>
             <h2>
                 Whose turn: {activeSide}
             </h2>
-            <div className={styles.boardWrapper}>
-                {showBoard()}
-            </div>
-
+            <ShowBoard
+                board={board}
+                selectedPiece={selectedPiece}
+                onCellClick={onCellClick}
+            />
         </>
     )
 };
