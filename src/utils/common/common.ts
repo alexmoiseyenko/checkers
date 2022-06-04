@@ -39,8 +39,16 @@ const isSamePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
     return currentPiece.row === selectedPiece.row && currentPiece.col === selectedPiece.col;
 };
 
+const getAllowedDirections = (boardSize: number): number[] => {
+    const firstAllowedDirection = boardSize - 1;
+    const secondAllowedDirection = boardSize + 1;
+
+    return [firstAllowedDirection, secondAllowedDirection];
+}
+
 export {
     getBoard,
     isMinePiece,
-    isSamePiece
+    isSamePiece,
+    getAllowedDirections,
 };
