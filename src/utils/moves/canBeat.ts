@@ -34,7 +34,7 @@ const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boo
     }
 
     const isPiece = board[selectedPosition]?.piece;
-    const pieceBetween = currentPosition + direction;
+    const pieceBetween = selectedPosition - direction;
 
     if (!board[pieceBetween].piece) {
         return false;
