@@ -19,8 +19,16 @@ const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boo
     if (currentPiece.piece.state === PieceState.Man) {
         const direction = (selectedPosition - currentPosition) / 2;
 
+        if (!getAllowedDirections(BOARD_SIZE).includes(Math.abs(direction))) {
+            return false;
+        }
+
         const isPiece = board[selectedPosition]?.piece;
         const pieceBetween = currentPosition + direction;
+
+        if (!board[pieceBetween].piece) {
+            return false;
+        }
 
         return !isPiece && !isMinePiece(currentPiece, board[pieceBetween]);
     } else if (currentPiece.piece.state === PieceState.King) {
