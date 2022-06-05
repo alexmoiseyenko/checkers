@@ -5,7 +5,7 @@ import {PieceColor, PieceState} from "../../utils/consts/Piece";
 import {BOARD_SIZE} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
-import {isMinePiece, isSamePiece, isShouldBecomeKing} from "../../utils/board/board";
+import {isMinePiece, isSamePiece, isShouldBecomeKing, movePiece} from "../../utils/board/board";
 import ShowBoard from "./ShowBoard";
 
 export interface IBoard {
@@ -105,45 +105,17 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     setSelectedPiece(cell);
                 }
             } else if (canMove(selectedPiece, cell, board, activeSide)) {
-                const newBoard = Object.assign(board);
-                const oldPosition = newBoard.findIndex((item: ICell) => (
-                    item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+                movePiece(
+                    board,
+                    selectedPiece,
+                    cell,
+                    updateBoard,
+                    activeSide,
+                    setBoard,
+                    setSelectedPiece,
+                    setUpdateBoard,
+                    setActiveSide,
                 );
-                const newPosition = newBoard.findIndex((item: ICell) => (
-                    item.row === cell?.row && item.col === cell?.col)
-                );
-
-                newBoard[newPosition] = {
-                    ...newBoard[newPosition],
-                    piece: newBoard[oldPosition].piece,
-                };
-
-                newBoard[oldPosition] = {
-                    ...newBoard[oldPosition],
-                    piece: null,
-                };
-
-                if (
-                    selectedPiece.piece?.state !== PieceState.King &&
-                    isShouldBecomeKing(selectedPiece, cell)
-                ) {
-                    newBoard[newPosition] = {
-                        ...newBoard[newPosition],
-                        piece: {
-                            ...newBoard[newPosition].piece,
-                            state: PieceState.King
-                        },
-                    };
-                }
-
-                setBoard(newBoard);
-                setSelectedPiece(undefined);
-                setUpdateBoard(!updateBoard);
-                if (activeSide === PieceColor.White) {
-                    setActiveSide(PieceColor.Black);
-                } else {
-                    setActiveSide(PieceColor.White);
-                }
             } else if (canBeat(selectedPiece, cell, board)) {
                 const newBoard = Object.assign(board);
                 const oldPosition = newBoard.findIndex((item: ICell) => (
