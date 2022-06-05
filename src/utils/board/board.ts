@@ -94,64 +94,59 @@ const beatPiece = (
     setCanBeatAgain: (canBeatAgain: boolean) => void,
 ): void => {
     const newBoard = Object.assign(board);
+
     const currentPosition = newBoard.findIndex((item: ICell) => (
         item.row === currentPiece?.row && item.col === currentPiece?.col)
     );
+
     const newPosition = newBoard.findIndex((item: ICell) => (
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
     );
 
+    let positionBetween;
+    let isWillBeKing = currentPiece?.piece?.state === PieceState.Man &&
+        isShouldBecomeKing(currentPiece, selectedPiece);
+
     if (currentPiece?.piece?.state === PieceState.Man) {
-        const positionBetween = newPosition - ((newPosition - currentPosition) / 2);
-
-        newBoard[newPosition] = {
-            ...newBoard[newPosition],
-            piece: newBoard[currentPosition].piece,
-        };
-
-        newBoard[currentPosition] = {
-            ...newBoard[currentPosition],
-            piece: null,
-        };
-
-        newBoard[positionBetween] = {
-            ...newBoard[positionBetween],
-            piece: null,
-        };
-
-        if (isShouldBecomeKing(currentPiece, selectedPiece)) {
-            newBoard[newPosition] = {
-                ...newBoard[newPosition],
-                piece: {
-                    ...newBoard[newPosition].piece,
-                    state: PieceState.King
-                },
-            };
-        }
-    } else if (currentPiece?.piece?.state === PieceState.King) {
+        positionBetween = newPosition - ((newPosition - currentPosition) / 2);
+    } else {
         const cellDifference = Math.abs(selectedPiece.row - currentPiece.row);
         const direction = (newPosition - currentPosition) / cellDifference;
 
-        const positionBetween = newPosition - direction;
+        positionBetween = newPosition - direction;
+    }
 
+    if (isWillBeKing) {
+        newBoard[newPosition] = {
+            ...newBoard[newPosition],
+            piece: {
+                ...newBoard[newPosition].piece,
+                state: PieceState.King
+            },
+        };
+    } else {
         newBoard[newPosition] = {
             ...newBoard[newPosition],
             piece: newBoard[currentPosition].piece,
         };
-
-        newBoard[currentPosition] = {
-            ...newBoard[currentPosition],
-            piece: null,
-        };
-
-        newBoard[positionBetween] = {
-            ...newBoard[positionBetween],
-            piece: null,
-        };
     }
+
+    newBoard[currentPosition] = {
+        ...newBoard[currentPosition],
+        piece: null,
+    };
+
+    newBoard[positionBetween] = {
+        ...newBoard[positionBetween],
+        piece: null,
+    };
 
     setBoard(newBoard);
     setUpdateBoard(!updateBoard);
+
+    if (isWillBeKing) {
+        return;
+    }
 
     let allowedPositions;
 
