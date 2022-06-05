@@ -36,7 +36,7 @@ const movePiece = (
     updateBoard: boolean,
     activeSide: PieceColor,
     setBoard: (board: ICell[]) => void,
-    setSelectedPiece: (piece: ICell | undefined) => void,
+    setCurrentPiece: (piece: ICell | null) => void,
     setUpdateBoard: (updateBoard: boolean) => void,
     setActiveSide: (activeSide: PieceColor) => void,
 ): void => {
@@ -72,7 +72,7 @@ const movePiece = (
     }
 
     setBoard(newBoard);
-    setSelectedPiece(undefined);
+    setCurrentPiece(null);
     setUpdateBoard(!updateBoard);
     switchSide(activeSide, setActiveSide);
 };
@@ -83,11 +83,12 @@ const beatPiece = (
     selectedPiece: ICell,
     updateBoard: boolean,
     activeSide: PieceColor,
-    setSelectedPiece: (piece: ICell | undefined) => void,
+    setCurrentPiece: (piece: ICell | null) => void,
     setActiveSide: (activeSide: PieceColor) => void,
     setBoard: (board: ICell[]) => void,
     setUpdateBoard: (updateBoard: boolean) => void,
     setCanBeatAgain: (canBeatAgain: boolean) => void,
+    canBeatPiece?: boolean,
 ): void => {
     const newBoard = Object.assign(board);
 
@@ -103,7 +104,7 @@ const beatPiece = (
     let isWillBeKing = currentPiece?.piece?.state === PieceState.Man &&
         isShouldBecomeKing(currentPiece, selectedPiece);
 
-    if (currentPiece?.piece?.state === PieceState.Man) {
+    if (currentPiece?.piece?.state === PieceState.Man || canBeatPiece) {
         positionBetween = newPosition - ((newPosition - currentPosition) / 2);
     } else {
         const cellDifference = Math.abs(selectedPiece.row - currentPiece.row);
@@ -116,7 +117,7 @@ const beatPiece = (
         newBoard[newPosition] = {
             ...newBoard[newPosition],
             piece: {
-                ...newBoard[newPosition].piece,
+                ...newBoard[currentPosition].piece,
                 state: PieceState.King
             },
         };
@@ -141,6 +142,7 @@ const beatPiece = (
     setUpdateBoard(!updateBoard);
 
     if (isWillBeKing) {
+        setCurrentPiece(null);
         switchSide(activeSide, setActiveSide);
         return;
     }
@@ -159,14 +161,14 @@ const beatPiece = (
     for (let i = 0; i < allowedPositions.length; i++) {
         if (canBeat(newBoard[newPosition], newBoard[allowedPositions[i]], newBoard)) {
             setCanBeatAgain(true);
-            setSelectedPiece(newBoard[newPosition]);
+            setCurrentPiece(newBoard[newPosition]);
             canBeatAgain = true;
             return;
         }
     }
 
     if (!canBeatAgain) {
-        setSelectedPiece(undefined);
+        setCurrentPiece(null);
 
         switchSide(activeSide, setActiveSide);
     }

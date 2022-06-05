@@ -7,7 +7,7 @@ import {ICell} from "../../interfaces/interfaces";
 
 interface IShowBoard {
     board: ICell[];
-    currentPiece: ICell | undefined;
+    currentPiece: ICell | null;
     onCellClick: (cell: ICell) => void;
 }
 
