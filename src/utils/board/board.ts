@@ -74,11 +74,7 @@ const movePiece = (
     setBoard(newBoard);
     setSelectedPiece(undefined);
     setUpdateBoard(!updateBoard);
-    if (activeSide === PieceColor.White) {
-        setActiveSide(PieceColor.Black);
-    } else {
-        setActiveSide(PieceColor.White);
-    }
+    switchSide(activeSide, setActiveSide);
 };
 
 const beatPiece = (
@@ -145,6 +141,7 @@ const beatPiece = (
     setUpdateBoard(!updateBoard);
 
     if (isWillBeKing) {
+        switchSide(activeSide, setActiveSide);
         return;
     }
 
@@ -171,13 +168,17 @@ const beatPiece = (
     if (!canBeatAgain) {
         setSelectedPiece(undefined);
 
-        if (activeSide === PieceColor.White) {
-            setActiveSide(PieceColor.Black);
-        } else {
-            setActiveSide(PieceColor.White);
-        }
+        switchSide(activeSide, setActiveSide);
     }
-}
+};
+
+const switchSide = (activeSide: PieceColor, setActiveSide: (activeSide: PieceColor) => void): void => {
+    if (activeSide === PieceColor.White) {
+        setActiveSide(PieceColor.Black);
+    } else {
+        setActiveSide(PieceColor.White);
+    }
+};
 
 export {
     isMinePiece,
