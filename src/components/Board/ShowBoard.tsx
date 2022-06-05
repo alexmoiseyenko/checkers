@@ -7,14 +7,14 @@ import {ICell} from "../../interfaces/interfaces";
 
 interface IShowBoard {
     board: ICell[];
-    selectedPiece: ICell | undefined;
+    currentPiece: ICell | undefined;
     onCellClick: (cell: ICell) => void;
 }
 
 const ShowBoard: React.FC<IShowBoard> = (props): JSX.Element => {
     const {
         board,
-        selectedPiece,
+        currentPiece,
         onCellClick,
     } = props;
 
@@ -27,7 +27,7 @@ const ShowBoard: React.FC<IShowBoard> = (props): JSX.Element => {
         const currentCell = board[cell];
         const { row, col, isBlackCell, piece } = currentCell;
 
-        const isActiveCell = row === selectedPiece?.row && col === selectedPiece.col;
+        const isActiveCell = row === currentPiece?.row && col === currentPiece.col;
         cells.push(
             <div
                 onClick={() => onCellClick(currentCell)}

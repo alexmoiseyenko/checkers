@@ -1,6 +1,7 @@
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/Piece";
 import {BOARD_SIZE} from "../consts/board";
+import canBeat from "../moves/canBeat";
 
 const isMinePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
     return currentPiece.piece?.color === selectedPiece.piece?.color;
@@ -78,6 +79,109 @@ const movePiece = (
     } else {
         setActiveSide(PieceColor.White);
     }
+};
+
+const beatPiece = (
+    board: ICell[],
+    currentPiece: ICell,
+    selectedPiece: ICell,
+    updateBoard: boolean,
+    activeSide: PieceColor,
+    setSelectedPiece: (piece: ICell | undefined) => void,
+    setActiveSide: (activeSide: PieceColor) => void,
+    setBoard: (board: ICell[]) => void,
+    setUpdateBoard: (updateBoard: boolean) => void,
+    setCanBeatAgain: (canBeatAgain: boolean) => void,
+): void => {
+    const newBoard = Object.assign(board);
+    const currentPosition = newBoard.findIndex((item: ICell) => (
+        item.row === currentPiece?.row && item.col === currentPiece?.col)
+    );
+    const newPosition = newBoard.findIndex((item: ICell) => (
+        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+    );
+
+    if (currentPiece?.piece?.state === PieceState.Man) {
+        const positionBetween = newPosition - ((newPosition - currentPosition) / 2);
+
+        newBoard[newPosition] = {
+            ...newBoard[newPosition],
+            piece: newBoard[currentPosition].piece,
+        };
+
+        newBoard[currentPosition] = {
+            ...newBoard[currentPosition],
+            piece: null,
+        };
+
+        newBoard[positionBetween] = {
+            ...newBoard[positionBetween],
+            piece: null,
+        };
+
+        if (isShouldBecomeKing(currentPiece, selectedPiece)) {
+            newBoard[newPosition] = {
+                ...newBoard[newPosition],
+                piece: {
+                    ...newBoard[newPosition].piece,
+                    state: PieceState.King
+                },
+            };
+        }
+    } else if (currentPiece?.piece?.state === PieceState.King) {
+        const cellDifference = Math.abs(selectedPiece.row - currentPiece.row);
+        const direction = (newPosition - currentPosition) / cellDifference;
+
+        const positionBetween = newPosition - direction;
+
+        newBoard[newPosition] = {
+            ...newBoard[newPosition],
+            piece: newBoard[currentPosition].piece,
+        };
+
+        newBoard[currentPosition] = {
+            ...newBoard[currentPosition],
+            piece: null,
+        };
+
+        newBoard[positionBetween] = {
+            ...newBoard[positionBetween],
+            piece: null,
+        };
+    }
+
+    setBoard(newBoard);
+    setUpdateBoard(!updateBoard);
+
+    let allowedPositions;
+
+    const topLeftCellPos = newPosition - (BOARD_SIZE - 1) * 2;
+    const topRightCellPos = newPosition - (BOARD_SIZE + 1) * 2;
+    const bottomLeftCellPos = newPosition + (BOARD_SIZE - 1) * 2;
+    const bottomRightCellPos = newPosition + (BOARD_SIZE + 1) * 2;
+
+    allowedPositions = [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
+
+    let canBeatAgain = false;
+
+    for (let i = 0; i < allowedPositions.length; i++) {
+        if (canBeat(newBoard[newPosition], newBoard[allowedPositions[i]], newBoard)) {
+            setCanBeatAgain(true);
+            setSelectedPiece(newBoard[newPosition]);
+            canBeatAgain = true;
+            return;
+        }
+    }
+
+    if (!canBeatAgain) {
+        setSelectedPiece(undefined);
+
+        if (activeSide === PieceColor.White) {
+            setActiveSide(PieceColor.Black);
+        } else {
+            setActiveSide(PieceColor.White);
+        }
+    }
 }
 
 export {
@@ -86,4 +190,5 @@ export {
     getAllowedDirections,
     isShouldBecomeKing,
     movePiece,
+    beatPiece,
 }

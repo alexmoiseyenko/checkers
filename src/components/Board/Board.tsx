@@ -5,7 +5,7 @@ import {PieceColor, PieceState} from "../../utils/consts/Piece";
 import {BOARD_SIZE} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
-import {isMinePiece, isSamePiece, isShouldBecomeKing, movePiece} from "../../utils/board/board";
+import {beatPiece, isMinePiece, isSamePiece, isShouldBecomeKing, movePiece} from "../../utils/board/board";
 import ShowBoard from "./ShowBoard";
 
 export interface IBoard {
@@ -13,28 +13,28 @@ export interface IBoard {
 }
 
 const Board: React.FC<IBoard> = (): JSX.Element => {
-    const [selectedPiece, setSelectedPiece] = useState<ICell>();
+    const [currentPiece, setCurrentPiece] = useState<ICell>();
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
     const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
 
-    const onCellClick = (cell: ICell): void => {
-        if (cell.piece && !selectedPiece) {
-            if (cell.piece.color === activeSide) {
-                setSelectedPiece(cell);
+    const onCellClick = (selectedPiece: ICell): void => {
+        if (selectedPiece.piece && !currentPiece) {
+            if (selectedPiece.piece.color === activeSide) {
+                setCurrentPiece(selectedPiece);
             }
-        } else if (cell.isBlackCell && selectedPiece) {
+        } else if (selectedPiece.isBlackCell && currentPiece) {
             if (canBeatAgain) {
-                if (canBeat(selectedPiece, cell, board)) {
+                if (canBeat(currentPiece, selectedPiece, board)) {
                     setCanBeatAgain(false);
                     const newBoard = Object.assign(board);
                     const oldPosition = newBoard.findIndex((item: ICell) => (
-                        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+                        item.row === currentPiece?.row && item.col === currentPiece?.col)
                     );
                     const newPosition = newBoard.findIndex((item: ICell) => (
-                        item.row === cell?.row && item.col === cell?.col)
+                        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
                     );
 
                     const positionBetween = newPosition - ((newPosition - oldPosition) / 2);
@@ -54,7 +54,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                         piece: null,
                     };
 
-                    if (isShouldBecomeKing(selectedPiece, cell)) {
+                    if (isShouldBecomeKing(currentPiece, selectedPiece)) {
                         newBoard[newPosition] = {
                             ...newBoard[newPosition],
                             piece: {
@@ -80,16 +80,16 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     let canBeatAgain = false;
 
                     for (let i = 0; i < allowedPositions.length; i++) {
-                        if (canBeat(cell, board[allowedPositions[i]], board)) {
+                        if (canBeat(selectedPiece, board[allowedPositions[i]], board)) {
                             setCanBeatAgain(true);
-                            setSelectedPiece(cell);
+                            setCurrentPiece(selectedPiece);
                             canBeatAgain = true;
                             return;
                         }
                     }
 
                     if (!canBeatAgain) {
-                        setSelectedPiece(undefined);
+                        setCurrentPiece(undefined);
 
                         if (activeSide === PieceColor.White) {
                             setActiveSide(PieceColor.Black);
@@ -98,124 +98,37 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                         }
                     }
                 }
-            } else if (isMinePiece(cell, selectedPiece)) {
-                if (isSamePiece(cell, selectedPiece)) {
-                    setSelectedPiece(undefined);
+            } else if (isMinePiece(selectedPiece, currentPiece)) {
+                if (isSamePiece(selectedPiece, selectedPiece)) {
+                    setCurrentPiece(undefined);
                 } else {
-                    setSelectedPiece(cell);
+                    setCurrentPiece(selectedPiece);
                 }
-            } else if (canMove(selectedPiece, cell, board, activeSide)) {
+            } else if (canMove(currentPiece, selectedPiece, board, activeSide)) {
                 movePiece(
                     board,
+                    currentPiece,
                     selectedPiece,
-                    cell,
                     updateBoard,
                     activeSide,
                     setBoard,
-                    setSelectedPiece,
+                    setCurrentPiece,
                     setUpdateBoard,
                     setActiveSide,
                 );
-            } else if (canBeat(selectedPiece, cell, board)) {
-                const newBoard = Object.assign(board);
-                const oldPosition = newBoard.findIndex((item: ICell) => (
-                    item.row === selectedPiece?.row && item.col === selectedPiece?.col)
-                );
-                const newPosition = newBoard.findIndex((item: ICell) => (
-                    item.row === cell?.row && item.col === cell?.col)
-                );
-
-                if (selectedPiece?.piece?.state === PieceState.Man) {
-                    const positionBetween = newPosition - ((newPosition - oldPosition) / 2);
-
-                    newBoard[newPosition] = {
-                        ...newBoard[newPosition],
-                        piece: newBoard[oldPosition].piece,
-                    };
-
-                    newBoard[oldPosition] = {
-                        ...newBoard[oldPosition],
-                        piece: null,
-                    };
-
-                    newBoard[positionBetween] = {
-                        ...newBoard[positionBetween],
-                        piece: null,
-                    };
-
-                    if (isShouldBecomeKing(selectedPiece, cell)) {
-                        newBoard[newPosition] = {
-                            ...newBoard[newPosition],
-                            piece: {
-                                ...newBoard[newPosition].piece,
-                                state: PieceState.King
-                            },
-                        };
-                    }
-                } else if (selectedPiece?.piece?.state === PieceState.King) {
-                    const currentPosition = board.findIndex((item: ICell) => (
-                        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
-                    );
-
-                    const cellPosition = board.findIndex((item: ICell) => (
-                        item.row === cell?.row && item.col === cell?.col)
-                    );
-
-
-                    const cellDifference = Math.abs(cell.row - selectedPiece.row);
-                    const direction = (cellPosition - currentPosition) / cellDifference;
-
-                    const positionBetween = cellPosition - direction;
-
-                    newBoard[newPosition] = {
-                        ...newBoard[newPosition],
-                        piece: newBoard[oldPosition].piece,
-                    };
-
-                    newBoard[oldPosition] = {
-                        ...newBoard[oldPosition],
-                        piece: null,
-                    };
-
-                    newBoard[positionBetween] = {
-                        ...newBoard[positionBetween],
-                        piece: null,
-                    };
-                }
-
-                let allowedPositions;
-
-                const topLeftCellPos = newPosition - (BOARD_SIZE - 1) * 2;
-                const topRightCellPos = newPosition - (BOARD_SIZE + 1) * 2;
-                const bottomLeftCellPos = newPosition + (BOARD_SIZE - 1) * 2;
-                const bottomRightCellPos = newPosition + (BOARD_SIZE + 1) * 2;
-
-                allowedPositions = [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
-
-                setBoard(newBoard);
-
-                setUpdateBoard(!updateBoard);
-
-                let canBeatAgain = false;
-
-                for (let i = 0; i < allowedPositions.length; i++) {
-                    if (canBeat(newBoard[newPosition], newBoard[allowedPositions[i]], newBoard)) {
-                        setCanBeatAgain(true);
-                        setSelectedPiece(newBoard[newPosition]);
-                        canBeatAgain = true;
-                        return;
-                    }
-                }
-
-                if (!canBeatAgain) {
-                    setSelectedPiece(undefined);
-
-                    if (activeSide === PieceColor.White) {
-                        setActiveSide(PieceColor.Black);
-                    } else {
-                        setActiveSide(PieceColor.White);
-                    }
-                }
+            } else if (canBeat(currentPiece, selectedPiece, board)) {
+                beatPiece(
+                    board,
+                    currentPiece,
+                    selectedPiece,
+                    updateBoard,
+                    activeSide,
+                    setCurrentPiece,
+                    setActiveSide,
+                    setBoard,
+                    setUpdateBoard,
+                    setCanBeatAgain,
+                )
             }
         }
     };
@@ -227,7 +140,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             </h2>
             <ShowBoard
                 board={board}
-                selectedPiece={selectedPiece}
+                currentPiece={currentPiece}
                 onCellClick={onCellClick}
             />
         </>
