@@ -20,40 +20,27 @@ const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boo
         return false;
     }
 
+    let direction;
+
     if (currentPiece.piece.state === PieceState.Man) {
-        const direction = (selectedPosition - currentPosition) / 2;
-
-        if (!getAllowedDirections(BOARD_SIZE).includes(Math.abs(direction))) {
-            return false;
-        }
-
-        const isPiece = board[selectedPosition]?.piece;
-        const pieceBetween = currentPosition + direction;
-
-        if (!board[pieceBetween].piece) {
-            return false;
-        }
-
-        return !isPiece && !isMinePiece(currentPiece, board[pieceBetween]);
-    } else if (currentPiece.piece.state === PieceState.King) {
+        direction = (selectedPosition - currentPosition) / 2;
+    } else {
         const cellDifference = Math.abs(currentPiece.row - selectedPiece.row);
-        const direction = (selectedPosition - currentPosition) / cellDifference;
-
-        if (!getAllowedDirections(BOARD_SIZE).includes(Math.abs(direction))) {
-            return false;
-        }
-
-        const isPiece = board[selectedPosition]?.piece;
-        const pieceBetween = selectedPosition - direction;
-
-        if (!board[pieceBetween].piece) {
-            return false;
-        }
-
-        return !isPiece && !isMinePiece(currentPiece, board[pieceBetween]);
+        direction = (selectedPosition - currentPosition) / cellDifference;
     }
 
-    return false;
+    if (!getAllowedDirections(BOARD_SIZE).includes(Math.abs(direction))) {
+        return false;
+    }
+
+    const isPiece = board[selectedPosition]?.piece;
+    const pieceBetween = currentPosition + direction;
+
+    if (!board[pieceBetween].piece) {
+        return false;
+    }
+
+    return !isPiece && !isMinePiece(currentPiece, board[pieceBetween]);
 };
 
 export default canBeat;
