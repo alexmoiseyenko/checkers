@@ -16,6 +16,10 @@ const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boo
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
     );
 
+    if (selectedPosition === -1 || !board[selectedPosition].isBlackCell) {
+        return false;
+    }
+
     if (currentPiece.piece.state === PieceState.Man) {
         const direction = (selectedPosition - currentPosition) / 2;
 

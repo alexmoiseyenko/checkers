@@ -227,7 +227,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                 let canBeatAgain = false;
 
                 for (let i = 0; i < allowedPositions.length; i++) {
-                    if (canBeat(newBoard[newPosition], board[allowedPositions[i]], board)) {
+                    if (canBeat(newBoard[newPosition], newBoard[allowedPositions[i]], newBoard)) {
                         setCanBeatAgain(true);
                         setSelectedPiece(newBoard[newPosition]);
                         canBeatAgain = true;
