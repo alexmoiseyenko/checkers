@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {getBoard} from "../../utils/common/common";
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor} from "../../utils/consts/Piece";
-import {BOARD_SIZE} from "../../utils/consts/board";
+import {BOARD_SIZE, NUMBER_OF_PIECES} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
 import {beatPiece, isMinePiece, isSamePiece, movePiece} from "../../utils/board/board";
@@ -92,19 +92,52 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
         }
     };
 
-    console.log("beatByBlack ", beatByBlack);
+    const showCongrats = (): JSX.Element => {
+        if (beatByWhite.length === NUMBER_OF_PIECES) {
+            return <h2 className={styles.header__title}>Whites win!</h2>
+        }
+
+        return <h2 className={styles.header__title}>Black win!</h2>
+    };
+
+    const resetGame = (): void => {
+        setCurrentPiece(null);
+        setUpdateBoard(false);
+        setBoard(getBoard(BOARD_SIZE));
+
+        setActiveSide(PieceColor.White);
+        setCanBeatAgain(false);
+
+        setBeatByBlack([]);
+        setBeatByWhite([]);
+    }
 
     return (
-        <>
-            <h2>
-                Whose turn: {activeSide}
-            </h2>
+        <div className={styles.wrapper}>
+            <div className={styles.header}>
+                <button
+                    className={styles.resetButton}
+                    onClick={resetGame}
+                >
+                    Start new game
+                </button>
+                {
+                    beatByBlack.length === NUMBER_OF_PIECES ||
+                    beatByWhite.length === NUMBER_OF_PIECES ? (
+                        showCongrats()
+                    ) : (
+                        <h2 className={styles.header__title}>
+                            Whose turn: {activeSide}
+                        </h2>
+                    )
+                }
+            </div>
             <div className={styles.container}>
                 <div>
                     <h2>
                         Beat by blacks:
                     </h2>
-                    <ul>
+                    <ul className={styles.beatenPieces}>
                         {beatByBlack.map(({ piece }) => {
                             return piece && (
                                 <li>
@@ -126,7 +159,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     <h2>
                         Beat by whites:
                     </h2>
-                    <ul>
+                    <ul className={styles.beatenPieces}>
                         {beatByWhite.map(({ piece }) => {
                             return piece && (
                                 <li>
@@ -140,7 +173,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     </ul>
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 
