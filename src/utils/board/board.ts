@@ -83,11 +83,15 @@ const beatPiece = (
     selectedPiece: ICell,
     updateBoard: boolean,
     activeSide: PieceColor,
+    beatByWhite: ICell[],
+    beatByBlack: ICell[],
     setCurrentPiece: (piece: ICell | null) => void,
     setActiveSide: (activeSide: PieceColor) => void,
     setBoard: (board: ICell[]) => void,
     setUpdateBoard: (updateBoard: boolean) => void,
     setCanBeatAgain: (canBeatAgain: boolean) => void,
+    setBeatByWhite: (pieces: ICell[]) => void,
+    setBeatByBlack: (pieces: ICell[]) => void,
     canBeatPiece?: boolean,
 ): void => {
     const newBoard = Object.assign(board);
@@ -126,6 +130,16 @@ const beatPiece = (
             ...newBoard[newPosition],
             piece: newBoard[currentPosition].piece,
         };
+    }
+
+    if (currentPiece.piece?.color === PieceColor.White) {
+        const beatByWhites = Object.assign(beatByWhite);
+        beatByWhites.push(board[positionBetween]);
+        setBeatByWhite(beatByWhites);
+    } else {
+        const beatByBlackes = Object.assign(beatByBlack);
+        beatByBlackes.push(board[positionBetween]);
+        setBeatByBlack(beatByBlackes);
     }
 
     newBoard[currentPosition] = {
