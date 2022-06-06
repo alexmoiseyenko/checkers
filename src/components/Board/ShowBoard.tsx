@@ -31,35 +31,36 @@ const ShowBoard: React.FC<IShowBoard> = (props): JSX.Element => {
         cells.push(
             <div
                 onClick={() => onCellClick(currentCell)}
-        data-cell={`row-${row} col-${col}`}
-        style={{
-            top: `${rowPosition}px`,
-                left: `${colPosition}px`,
-        }}
-        className={clsx(
-                styles.cell,
-        {[styles.cell_black]: isBlackCell},
-        {[styles.cell_active]: isActiveCell},
-    )}
-    >
-        {piece ?
-            <div style={{ color: "white" }}>
-            idx: {cell}
-            row: {row}
-            state: {piece.state}
-            <Piece
-                color={piece.color}
-            state={piece.state}
-            />
+                data-cell={`row-${row} col-${col}`}
+                style={{
+                    top: `${rowPosition}px`,
+                    left: `${colPosition}px`,
+                }}
+                className={clsx(
+                    styles.cell,
+                    {[styles.cell_black]: isBlackCell},
+                    {[styles.cell_active]: isActiveCell},
+                    )}
+            >
+                {piece ? (
+                    <div style={{ color: "white" }}>
+                        {/*idx: {cell}*/}
+                        {/*row: {row}*/}
+                        {/*state: {piece.state}*/}
+                        <Piece
+                            color={piece.color}
+                            state={piece.state}
+                        />
+                    </div>
+                ) : (
+                    <div style={{ color: "white" }}>
+                        {/*idx: {cell}*/}
+                        {/*row: {row}*/}
+                    </div>
+                    )
+                }
             </div>
-        :
-            <div style={{ color: "white" }}>
-            idx: {cell}
-            row: {row}
-            </div>
-        }
-        </div>
-    );
+        );
 
         if (currentCell.col >= Math.sqrt(board.length) - 1) {
             colPosition = 0;
