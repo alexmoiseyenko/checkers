@@ -1,5 +1,8 @@
 .App {
+  height: 100vh;
   text-align: center;
+  background: url("images/background.webp") no-repeat no-repeat;
+  background-size: cover;
 }
 
 .App-logo {
