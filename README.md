@@ -1,4 +1,6 @@
 # Checkers project by Alex Moiseenko
+## Link to the project:
+https://alexmoiseyenko.github.io/checkers/
 
 Checkers is played by two people, on opposite sides of a playing board, alternating moves. One player has dark pieces, and the other has light pieces. Pieces move diagonally and pieces of the opponent are captured by jumping over them.
 
