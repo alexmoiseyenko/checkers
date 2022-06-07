@@ -1,22 +1,29 @@
 import clsx from "clsx";
+import {observer} from "mobx-react-lite";
+
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
 import {CELL_SIZE} from "../../utils/consts/board";
 import React from "react";
 import {ICell} from "../../interfaces/interfaces";
+import ThemeStore from "../../theme/ThemeStore";
 
 interface IShowBoard {
     board: ICell[];
     currentPiece: ICell | null;
     onCellClick: (cell: ICell) => void;
+    themeStore: ThemeStore;
 }
 
-const ShowBoard: React.FC<IShowBoard> = (props): JSX.Element => {
+const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
     const {
         board,
         currentPiece,
         onCellClick,
+        themeStore,
     } = props;
+
+    console.log("themeStore ", themeStore?.theme)
 
     const cells: JSX.Element[] = [];
 
@@ -75,6 +82,6 @@ const ShowBoard: React.FC<IShowBoard> = (props): JSX.Element => {
             {cells}
         </div>
     );
-};
+});
 
 export default ShowBoard;

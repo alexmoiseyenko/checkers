@@ -10,12 +10,15 @@ import ShowBoard from "./ShowBoard";
 import Piece from "../Piece/Piece";
 
 import styles from "./Board.module.scss";
+import ThemeStore from "../../theme/ThemeStore";
+import {observer} from "mobx-react-lite";
 
 export interface IBoard {
     size?: number;
+    themeStore: ThemeStore;
 }
 
-const Board: React.FC<IBoard> = (): JSX.Element => {
+const Board: React.FC<IBoard> = observer(({ themeStore}  ): JSX.Element => {
     const [currentPiece, setCurrentPiece] = useState<ICell | null>(null);
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
@@ -154,6 +157,7 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
                     board={board}
                     currentPiece={currentPiece}
                     onCellClick={onCellClick}
+                    themeStore={themeStore}
                 />
                 <div>
                     <h2>
@@ -175,6 +179,6 @@ const Board: React.FC<IBoard> = (): JSX.Element => {
             </div>
         </div>
     )
-};
+});
 
 export default Board;
