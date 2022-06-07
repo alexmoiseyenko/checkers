@@ -24,12 +24,31 @@
 }
 
 .cell_black {
-  background-color: #000;
   cursor: pointer;
 }
 
-.cell_active {
-  opacity: 0.7;
+.blackTheme {
+  &.cell_black {
+    background-color: #000;
+
+    &.cell_active {
+      background-color: #00000070;
+    }
+  }
+}
+
+.win95Theme {
+  &.cell {
+    background-color: #e9d8f2;
+  }
+
+  &.cell_black {
+    background-color: #6a0dad;
+
+    &.cell_active {
+      background-color: #FF00CC;
+    }
+  }
 }
 
 .wrapper {
@@ -84,4 +103,10 @@ ul {
   &:hover {
     background: #F0F0F0;
   }
+}
+
+.switchThemeButton {
+  @extend .resetButton;
+
+  left: 120px;
 }

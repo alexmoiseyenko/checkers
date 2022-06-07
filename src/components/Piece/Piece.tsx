@@ -4,13 +4,22 @@ import {IPiece} from "../../interfaces/interfaces";
 import clsx from "clsx";
 import {PieceColor, PieceState} from "../../utils/consts/Piece";
 import Crown from "../Crown/Crown";
+import {observer} from "mobx-react-lite";
+import {Theme} from "../../theme/Theme";
+import ThemeStore from "../../theme/ThemeStore";
 
-const Piece: React.FC<IPiece> = (props): JSX.Element => {
-    const { color, state } = props;
+interface IPieceWithStore extends IPiece {
+    themeStore: ThemeStore,
+}
+
+const Piece: React.FC<IPieceWithStore> = observer((props): JSX.Element => {
+    const { color, state, themeStore } = props;
     return (
         <div className={clsx(
             styles.piece,
             {[styles.piece_white]: color === PieceColor.White},
+            {[styles.win95Piece_white]: color === PieceColor.White &&
+                themeStore.theme === Theme.Win95},
         )}>
             <div className={clsx(
                 styles.pieceBorder,
@@ -22,6 +31,6 @@ const Piece: React.FC<IPiece> = (props): JSX.Element => {
             </div>
         </div>
     );
-};
+});
 
 export default Piece;

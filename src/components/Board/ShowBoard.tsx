@@ -7,6 +7,7 @@ import {CELL_SIZE} from "../../utils/consts/board";
 import React from "react";
 import {ICell} from "../../interfaces/interfaces";
 import ThemeStore from "../../theme/ThemeStore";
+import {Theme} from "../../theme/Theme";
 
 interface IShowBoard {
     board: ICell[];
@@ -47,7 +48,9 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
                     styles.cell,
                     {[styles.cell_black]: isBlackCell},
                     {[styles.cell_active]: isActiveCell},
-                    )}
+                    {[styles.blackTheme]: themeStore.theme === Theme.Black},
+                    {[styles.win95Theme]: themeStore.theme === Theme.Win95},
+                )}
             >
                 {piece ? (
                     <div style={{ color: "white" }}>
@@ -57,6 +60,7 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
                         <Piece
                             color={piece.color}
                             state={piece.state}
+                            themeStore={themeStore}
                         />
                     </div>
                 ) : (
