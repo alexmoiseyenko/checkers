@@ -9,6 +9,10 @@
   user-select: none;
 }
 
+.boardWrapperWin95 {
+  background: #e9d8f2;
+}
+
 .board {
   position: relative;
 }
@@ -38,10 +42,6 @@
 }
 
 .win95Theme {
-  &.cell {
-    background-color: #e9d8f2;
-  }
-
   &.cell_black {
     background-color: #6a0dad;
 

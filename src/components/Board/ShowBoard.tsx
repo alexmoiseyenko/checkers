@@ -24,8 +24,6 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
         themeStore,
     } = props;
 
-    console.log("themeStore ", themeStore?.theme)
-
     const cells: JSX.Element[] = [];
 
     let colPosition = 0;
@@ -35,43 +33,45 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
         const currentCell = board[cell];
         const { row, col, isBlackCell, piece } = currentCell;
 
-        const isActiveCell = row === currentPiece?.row && col === currentPiece.col;
-        cells.push(
-            <div
-                onClick={() => onCellClick(currentCell)}
-                data-cell={`row-${row} col-${col}`}
-                style={{
-                    top: `${rowPosition}px`,
-                    left: `${colPosition}px`,
-                }}
-                className={clsx(
-                    styles.cell,
-                    {[styles.cell_black]: isBlackCell},
-                    {[styles.cell_active]: isActiveCell},
-                    {[styles.blackTheme]: themeStore.theme === Theme.Black},
-                    {[styles.win95Theme]: themeStore.theme === Theme.Win95},
-                )}
-            >
-                {piece ? (
-                    <div style={{ color: "white" }}>
-                        {/*idx: {cell}*/}
-                        {/*row: {row}*/}
-                        {/*state: {piece.state}*/}
-                        <Piece
-                            color={piece.color}
-                            state={piece.state}
-                            themeStore={themeStore}
-                        />
-                    </div>
-                ) : (
-                    <div style={{ color: "white" }}>
-                        {/*idx: {cell}*/}
-                        {/*row: {row}*/}
-                    </div>
+        if (isBlackCell) {
+            const isActiveCell = row === currentPiece?.row && col === currentPiece.col;
+            cells.push(
+                <div
+                    onClick={() => onCellClick(currentCell)}
+                    data-cell={`row-${row} col-${col}`}
+                    style={{
+                        top: `${rowPosition}px`,
+                        left: `${colPosition}px`,
+                    }}
+                    className={clsx(
+                        styles.cell,
+                        {[styles.cell_black]: isBlackCell},
+                        {[styles.cell_active]: isActiveCell},
+                        {[styles.blackTheme]: themeStore.theme === Theme.Black},
+                        {[styles.win95Theme]: themeStore.theme === Theme.Win95},
+                    )}
+                >
+                    {piece ? (
+                        <div style={{ color: "white" }}>
+                            {/*idx: {cell}*/}
+                            {/*row: {row}*/}
+                            {/*state: {piece.state}*/}
+                            <Piece
+                                color={piece.color}
+                                state={piece.state}
+                                themeStore={themeStore}
+                            />
+                        </div>
+                    ) : (
+                        <div style={{ color: "white" }}>
+                            {/*idx: {cell}*/}
+                            {/*row: {row}*/}
+                        </div>
                     )
-                }
-            </div>
-        );
+                    }
+                </div>
+            );
+        }
 
         if (currentCell.col >= Math.sqrt(board.length) - 1) {
             colPosition = 0;
@@ -82,7 +82,10 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
     }
 
     return (
-        <div className={styles.boardWrapper}>
+        <div className={clsx(
+            styles.boardWrapper,
+            {[styles.boardWrapperWin95]: themeStore.theme === Theme.Win95},
+        )}>
             {cells}
         </div>
     );
