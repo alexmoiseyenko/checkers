@@ -1,0 +1,17 @@
+.button {
+    margin-right: 10px !important;
+}
+
+.menu {
+    @media screen and (max-width: 900px) {
+        position: absolute;
+        left: 0;
+        top: 0;
+        flex-direction: column;
+        display: none;
+    }
+}
+
+.menuActive {
+    display: flex;
+}
