@@ -1,0 +1,28 @@
+.burgerMenu {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.burgerMenu__item {
+    width: 100%;
+    height: 5px;
+    background-color: #000;
+    content: "|";
+    transition: transform 0.5s;
+}
+
+.burgerMenu__firstLine_open {
+    transform: translateY(20px) rotate(45deg);
+}
+
+.burgerMenu__secondLine_open {
+    display: none;
+}
+
+.burgerMenu__thirdLine_open {
+    transform: translateY(-20px) rotate(-45deg);
+}
