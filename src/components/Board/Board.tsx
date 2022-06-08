@@ -13,6 +13,7 @@ import styles from "./Board.module.scss";
 import ThemeStore from "../../theme/ThemeStore";
 import {observer} from "mobx-react-lite";
 import {Theme} from "../../theme/Theme";
+import Menu from "../Menu/Menu";
 
 export interface IBoard {
     size?: number;
@@ -118,26 +119,11 @@ const Board: React.FC<IBoard> = observer(({ themeStore}  ): JSX.Element => {
 
     return (
         <div className={styles.wrapper}>
+            <Menu
+                resetGame={resetGame}
+                themeStore={themeStore}
+            />
             <div className={styles.header}>
-                <button
-                    className={styles.resetButton}
-                    onClick={resetGame}
-                >
-                    Start new game
-                </button>
-                <button
-                    className={styles.switchThemeButton}
-                    onClick={() => themeStore.switchTheme(Theme.Black)}
-                >
-                    Set black theme
-                </button>
-                <button
-                    style={{ left: "250px" }}
-                    className={styles.switchThemeButton}
-                    onClick={() => themeStore.switchTheme(Theme.Win95)}
-                >
-                    Set win95 theme
-                </button>
                 {
                     beatByBlack.length === NUMBER_OF_PIECES ||
                     beatByWhite.length === NUMBER_OF_PIECES ? (

@@ -7,6 +7,11 @@
   background: #000;
   border: 2px solid #fff;
   border-radius: 50%;
+
+  @media screen and (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 .piece_white {
@@ -26,6 +31,11 @@
   border-radius: 50%;
   height: 40px;
   width: 40px;
+
+  @media screen and (max-width: 480px) {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .pieceBorder_white {

@@ -1,12 +1,19 @@
 .boardWrapper {
-  position: absolute;
-  top: 75px;
-  left: calc(100% / 2 - 400px);
   width: 800px;
   height: 800px;
+  display: grid;
+  grid-template-columns: repeat(8, 100px);
+  grid-template-rows: repeat(8, 100px);
   background: #fff;
   border: 3px solid #000;
   user-select: none;
+
+  @media screen and (max-width: 480px) {
+    width: 300px;
+    height: 300px;
+    grid-template-columns: repeat(8, 37.5px);
+    grid-template-rows: repeat(8, 37.5px);
+  }
 }
 
 .boardWrapperWin95 {
@@ -18,13 +25,17 @@
 }
 
 .cell {
-  position: absolute;
   width: 100px;
   height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #fff;
+
+  @media screen and (max-width: 480px) {
+    width: 37.5px;
+    height: 37.5px;
+  }
 }
 
 .cell_black {
@@ -55,7 +66,14 @@
   max-width: 1800px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 50px;
+  padding: 25px 50px;
+
+  @media screen and (max-width: 480px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
 }
 
 .container {
@@ -88,25 +106,4 @@ ul {
   width: 100%;
 }
 
-.resetButton {
-  position: absolute;
-  top: 15px;
-  left: 0;
-  height: 50px;
-  margin: 0;
-  padding: 0 10px;
-  background: #fff;
-  border: 3px solid;
-  border-radius: 15px;
-  cursor: pointer;
 
-  &:hover {
-    background: #F0F0F0;
-  }
-}
-
-.switchThemeButton {
-  @extend .resetButton;
-
-  left: 120px;
-}
