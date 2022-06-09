@@ -1,4 +1,6 @@
 import { PieceColor, PieceState } from "../consts/piece";
+import {NUMBER_OF_PIECES} from "../consts/board";
+import {ICell} from "../../interfaces/interfaces";
 
 const getBoard = (size: number) => {
     const board = [];
@@ -30,6 +32,15 @@ const getBoard = (size: number) => {
     return board;
 };
 
+const showCongrats = (beatByWhite: ICell[]): string => {
+    if (beatByWhite.length === NUMBER_OF_PIECES) {
+        return "Whites win!";
+    }
+
+    return "Black win!";
+};
+
 export {
     getBoard,
+    showCongrats,
 };

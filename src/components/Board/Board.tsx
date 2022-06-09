@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {getBoard} from "../../utils/common/common";
+import {getBoard, showCongrats} from "../../utils/common/common";
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor} from "../../utils/consts/piece";
 import {BOARD_SIZE, NUMBER_OF_PIECES} from "../../utils/consts/board";
@@ -104,14 +104,6 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
         }
     };
 
-    const showCongrats = (): JSX.Element => {
-        if (beatByWhite.length === NUMBER_OF_PIECES) {
-            return <h2 className={styles.header__title}>Whites win!</h2>
-        }
-
-        return <h2 className={styles.header__title}>Black win!</h2>
-    };
-
     const resetGame = (): void => {
         setCurrentPiece(null);
         setUpdateBoard(false);
@@ -134,7 +126,12 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
                 {
                     beatByBlack.length === NUMBER_OF_PIECES ||
                     beatByWhite.length === NUMBER_OF_PIECES ? (
-                        showCongrats()
+                        <h2
+                            className={styles.header__title}
+                        >
+                            {showCongrats(beatByWhite)}
+                        </h2>
+
                     ) : (
                         <h2 className={styles.header__title}>
                             Whose turn: {activeSide}
