@@ -5,8 +5,8 @@ import clsx from "clsx";
 import {PieceColor, PieceState} from "../../utils/consts/Piece";
 import Crown from "../Crown/Crown";
 import {observer} from "mobx-react-lite";
-import {Theme} from "../../theme/Theme";
-import ThemeStore from "../../theme/ThemeStore";
+import {Theme} from "../interfaces/Theme";
+import ThemeStore from "../store/theme/ThemeStore";
 
 interface IPieceWithStore extends IPiece {
     themeStore: ThemeStore,

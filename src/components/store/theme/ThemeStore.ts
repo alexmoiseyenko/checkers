@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx"
-import {Theme} from "./Theme";
+import {Theme} from "../../interfaces/Theme";
 
 class ThemeStore {
     theme = Theme.Black;

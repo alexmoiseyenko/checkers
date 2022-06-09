@@ -2,6 +2,9 @@ import {ICell} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/Piece";
 import {BOARD_SIZE} from "../consts/board";
 import canBeat from "../moves/canBeat";
+import GameStore from "../../components/store/game/GameStore";
+
+const gameStore = new GameStore();
 
 const isMinePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
     return currentPiece.piece?.color === selectedPiece.piece?.color;
@@ -90,8 +93,6 @@ const beatPiece = (
     setBoard: (board: ICell[]) => void,
     setUpdateBoard: (updateBoard: boolean) => void,
     setCanBeatAgain: (canBeatAgain: boolean) => void,
-    setBeatByWhite: (pieces: ICell[]) => void,
-    setBeatByBlack: (pieces: ICell[]) => void,
     canBeatPiece?: boolean,
 ): void => {
     const newBoard = Object.assign(board);
@@ -135,11 +136,11 @@ const beatPiece = (
     if (currentPiece.piece?.color === PieceColor.White) {
         const beatByWhites = Object.assign(beatByWhite);
         beatByWhites.push(board[positionBetween]);
-        setBeatByWhite(beatByWhites);
+        gameStore.addBeatByWhite(beatByWhites);
     } else {
         const beatByBlackes = Object.assign(beatByBlack);
         beatByBlackes.push(board[positionBetween]);
-        setBeatByBlack(beatByBlackes);
+        gameStore.addBeatByBlack(beatByBlackes);
     }
 
     newBoard[currentPosition] = {

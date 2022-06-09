@@ -2,12 +2,14 @@ import React from 'react';
 import styles from './App.module.css';
 
 import Board from "./components/Board/Board";
-import ThemeStore from "./theme/ThemeStore";
+import ThemeStore from "./components/store/theme/ThemeStore";
 import {observer} from "mobx-react-lite";
 import clsx from "clsx";
-import {Theme} from "./theme/Theme";
+import {Theme} from "./components/interfaces/Theme";
+import GameStore from "./components/store/game/GameStore";
 
 const themeStore = new ThemeStore();
+const gameStore = new GameStore();
 
 const App = observer(() => {
     const { theme } = themeStore;
@@ -16,7 +18,10 @@ const App = observer(() => {
             styles.App,
             {[ styles.AppWin95]: theme === Theme.Win95 }
         )}>
-            <Board themeStore={themeStore} />
+            <Board
+                themeStore={themeStore}
+                gameStore={gameStore}
+            />
         </div>
     );
 });

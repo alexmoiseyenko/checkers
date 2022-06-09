@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import styles from "./Menu.module.scss";
-import {Theme} from "../../theme/Theme";
+import {Theme} from "../interfaces/Theme";
 import {observer} from "mobx-react-lite";
-import ThemeStore from "../../theme/ThemeStore";
+import ThemeStore from "../store/theme/ThemeStore";
 import Button from "../Button/Button";
 import BurgerMenu from "../BurgerMenu/BurgerMenu";
 import clsx from "clsx";

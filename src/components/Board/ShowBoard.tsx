@@ -5,8 +5,8 @@ import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
 import React from "react";
 import {ICell} from "../../interfaces/interfaces";
-import ThemeStore from "../../theme/ThemeStore";
-import {Theme} from "../../theme/Theme";
+import ThemeStore from "../store/theme/ThemeStore";
+import {Theme} from "../interfaces/Theme";
 
 interface IShowBoard {
     board: ICell[];

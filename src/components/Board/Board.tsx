@@ -10,26 +10,33 @@ import ShowBoard from "./ShowBoard";
 import Piece from "../Piece/Piece";
 
 import styles from "./Board.module.scss";
-import ThemeStore from "../../theme/ThemeStore";
+import ThemeStore from "../store/theme/ThemeStore";
 import {observer} from "mobx-react-lite";
-import {Theme} from "../../theme/Theme";
 import Menu from "../Menu/Menu";
+import GameStore from "../store/game/GameStore";
 
 export interface IBoard {
-    size?: number;
     themeStore: ThemeStore;
+    gameStore: GameStore;
 }
 
-const Board: React.FC<IBoard> = observer(({ themeStore}  ): JSX.Element => {
+const Board: React.FC<IBoard> = observer((props): JSX.Element => {
+    const {
+        themeStore,
+        gameStore: {
+            beatByBlack,
+            beatByWhite,
+            addBeatByBlack,
+            addBeatByWhite
+        }
+    } = props;
+
     const [currentPiece, setCurrentPiece] = useState<ICell | null>(null);
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
     const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
     const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
-
-    const [beatByBlack, setBeatByBlack] = useState<ICell[]>([]);
-    const [beatByWhite, setBeatByWhite] = useState<ICell[]>([]);
 
     const onCellClick = (selectedPiece: ICell): void => {
         if (selectedPiece.piece && !currentPiece) {
@@ -53,8 +60,6 @@ const Board: React.FC<IBoard> = observer(({ themeStore}  ): JSX.Element => {
                         setBoard,
                         setUpdateBoard,
                         setCanBeatAgain,
-                        setBeatByWhite,
-                        setBeatByBlack,
                         canBeatAgain,
                     );
                 }
@@ -90,8 +95,6 @@ const Board: React.FC<IBoard> = observer(({ themeStore}  ): JSX.Element => {
                     setBoard,
                     setUpdateBoard,
                     setCanBeatAgain,
-                    setBeatByWhite,
-                    setBeatByBlack,
                 )
             }
         }
@@ -113,8 +116,8 @@ const Board: React.FC<IBoard> = observer(({ themeStore}  ): JSX.Element => {
         setActiveSide(PieceColor.White);
         setCanBeatAgain(false);
 
-        setBeatByBlack([]);
-        setBeatByWhite([]);
+        addBeatByBlack([]);
+        addBeatByWhite([]);
     }
 
     return (
