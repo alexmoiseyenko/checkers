@@ -1,4 +1,4 @@
-import {PieceColor, PieceState} from "../utils/consts/Piece";
+import {PieceColor, PieceState} from "../utils/consts/piece";
 
 export interface IPiece {
     state: PieceState,

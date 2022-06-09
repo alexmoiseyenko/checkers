@@ -1,5 +1,5 @@
 import {ICell} from "../../interfaces/interfaces";
-import {PieceState} from "../consts/Piece";
+import {PieceState} from "../consts/piece";
 import {BOARD_SIZE} from "../consts/board";
 import {getAllowedDirections, isMinePiece} from "../board/board";
 

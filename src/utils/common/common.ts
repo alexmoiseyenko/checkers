@@ -1,5 +1,4 @@
-import { PieceColor, PieceState } from "../consts/Piece";
-import {ICell} from "../../interfaces/interfaces";
+import { PieceColor, PieceState } from "../consts/piece";
 
 const getBoard = (size: number) => {
     const board = [];

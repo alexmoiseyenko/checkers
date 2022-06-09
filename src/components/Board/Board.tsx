@@ -1,19 +1,21 @@
 import React, {useState} from "react";
 import {getBoard} from "../../utils/common/common";
 import {ICell} from "../../interfaces/interfaces";
-import {PieceColor} from "../../utils/consts/Piece";
+import {PieceColor} from "../../utils/consts/piece";
 import {BOARD_SIZE, NUMBER_OF_PIECES} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
 import {beatPiece, isMinePiece, isSamePiece, movePiece} from "../../utils/board/board";
 import ShowBoard from "./ShowBoard";
-import Piece from "../Piece/Piece";
 
 import styles from "./Board.module.scss";
 import ThemeStore from "../store/theme/ThemeStore";
 import {observer} from "mobx-react-lite";
 import Menu from "../Menu/Menu";
 import GameStore from "../store/game/GameStore";
+import Score from "../Score/Score";
+import useWindowSize from "../../utils/hooks/useWindowSize";
+import {SCREEN_SIZE} from "../../utils/consts/consts";
 
 export interface IBoard {
     themeStore: ThemeStore;
@@ -30,6 +32,8 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
             addBeatByWhite
         }
     } = props;
+
+    const { width: screenWidth } = useWindowSize();
 
     const [currentPiece, setCurrentPiece] = useState<ICell | null>(null);
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
@@ -139,48 +143,26 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
                 }
             </div>
             <div className={styles.container}>
-                <div>
-                    <h2>
-                        Beat by blacks:
-                    </h2>
-                    <ul className={styles.beatenPieces}>
-                        {beatByBlack.map(({ piece }) => {
-                            return piece && (
-                                <li>
-                                    <Piece
-                                        color={piece.color}
-                                        state={piece.state}
-                                        themeStore={themeStore}
-                                    />
-                                </li>
-                            )
-                        })}
-                    </ul>
-                </div>
+                {screenWidth > SCREEN_SIZE.tablet && (
+                    <Score
+                        title="Beaten by black:"
+                        themeStore={themeStore}
+                        beatenPieces={beatByBlack}
+                    />
+                )}
                 <ShowBoard
                     board={board}
                     currentPiece={currentPiece}
                     onCellClick={onCellClick}
                     themeStore={themeStore}
                 />
-                <div>
-                    <h2>
-                        Beat by whites:
-                    </h2>
-                    <ul className={styles.beatenPieces}>
-                        {beatByWhite.map(({ piece }) => {
-                            return piece && (
-                                <li>
-                                    <Piece
-                                        color={piece.color}
-                                        state={piece.state}
-                                        themeStore={themeStore}
-                                    />
-                                </li>
-                            )
-                        })}
-                    </ul>
-                </div>
+                {screenWidth > SCREEN_SIZE.tablet && (
+                    <Score
+                        title="Beaten by white:"
+                        themeStore={themeStore}
+                        beatenPieces={beatByWhite}
+                    />
+                )}
             </div>
         </div>
     )

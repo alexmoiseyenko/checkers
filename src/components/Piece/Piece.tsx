@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Piece.module.scss";
 import {IPiece} from "../../interfaces/interfaces";
 import clsx from "clsx";
-import {PieceColor, PieceState} from "../../utils/consts/Piece";
+import {PieceColor, PieceState} from "../../utils/consts/piece";
 import Crown from "../Crown/Crown";
 import {observer} from "mobx-react-lite";
 import {Theme} from "../interfaces/Theme";
