@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {getBoard, showCongrats} from "../../utils/common/common";
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor} from "../../utils/consts/piece";
@@ -42,7 +42,7 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
     const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
 
-    const onCellClick = (selectedPiece: ICell): void => {
+    const onCellClick = useCallback((selectedPiece: ICell): void => {
         if (selectedPiece.piece && !currentPiece) {
             if (selectedPiece.piece.color === activeSide) {
                 setCurrentPiece(selectedPiece);
@@ -88,9 +88,9 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
                 )
             }
         }
-    };
+    }, [activeSide, board, currentPiece]);
 
-    const resetGame = (): void => {
+    const resetGame = useCallback((): void => {
         setCurrentPiece(null);
         setUpdateBoard(false);
         setBoard(getBoard(BOARD_SIZE));
@@ -100,7 +100,7 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
 
         gameStore.addBeatByBlack([]);
         gameStore.addBeatByWhite([]);
-    }
+    }, []);
 
     return (
         <div className={styles.wrapper}>
