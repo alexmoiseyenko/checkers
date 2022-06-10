@@ -32,7 +32,7 @@ const getBoard = (size: number) => {
     return board;
 };
 
-const showCongrats = (beatByWhite: ICell[]): string => {
+const getCongratsText = (beatByWhite: ICell[]): string => {
     if (beatByWhite.length === NUMBER_OF_PIECES) {
         return "Whites win!";
     }
@@ -42,5 +42,5 @@ const showCongrats = (beatByWhite: ICell[]): string => {
 
 export {
     getBoard,
-    showCongrats,
+    getCongratsText,
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './App.module.css';
 
-import Board from "./components/Board/Board";
+import Game from "./components/Board/Game";
 import ThemeStore from "./store/theme/ThemeStore";
 import {observer} from "mobx-react-lite";
 import clsx from "clsx";
@@ -18,7 +18,7 @@ const App = observer(() => {
             styles.App,
             {[ styles.AppWin95]: theme === Theme.Win95 }
         )}>
-            <Board
+            <Game
                 themeStore={themeStore}
                 gameStore={gameStore}
             />

@@ -1,155 +1,72 @@
-import React, {useCallback, useState} from "react";
-import {getBoard, showCongrats} from "../../utils/common/common";
-import {ICell} from "../../interfaces/interfaces";
-import {PieceColor} from "../../utils/consts/piece";
-import {BOARD_SIZE, NUMBER_OF_PIECES} from "../../utils/consts/board";
-import canBeat from "../../utils/moves/canBeat";
-import canMove from "../../utils/moves/canMove";
-import {beatPiece, isMinePiece, isSamePiece, movePiece} from "../../utils/board/board";
-import ShowBoard from "./ShowBoard";
+import clsx from "clsx";
+import {observer} from "mobx-react-lite";
 
 import styles from "./Board.module.scss";
+import Piece from "../Piece/Piece";
+import React from "react";
+import {ICell} from "../../interfaces/interfaces";
 import ThemeStore from "../../store/theme/ThemeStore";
-import {observer} from "mobx-react-lite";
-import Menu from "../Menu/Menu";
-import GameStore from "../../store/game/GameStore";
-import Score from "../Score/Score";
-import useWindowSize from "../../utils/hooks/useWindowSize";
-import {SCREEN_SIZE} from "../../utils/consts/consts";
+import {Theme} from "../../enums/Theme";
 
-export interface IBoard {
+interface IShowBoard {
+    board: ICell[];
+    currentPiece: ICell | null;
+    onCellClick: (cell: ICell) => void;
     themeStore: ThemeStore;
-    gameStore: GameStore;
 }
 
-const Board: React.FC<IBoard> = observer((props): JSX.Element => {
+const Board: React.FC<IShowBoard> = observer((props): JSX.Element => {
     const {
+        board,
+        currentPiece,
+        onCellClick,
         themeStore,
-        gameStore,
     } = props;
 
-    const {
-        beatByBlack,
-        beatByWhite,
-    } = gameStore;
+    const cells: JSX.Element[] = [];
 
-    const { width: screenWidth } = useWindowSize();
+    for (let cell = 0; cell < board.length; cell++) {
+        const currentCell = board[cell];
+        const { row, col, isBlackCell, piece } = currentCell;
 
-    const [currentPiece, setCurrentPiece] = useState<ICell | null>(null);
-    const [updateBoard, setUpdateBoard] = useState<boolean>(false);
-    const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
-
-    const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
-    const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
-
-    const onCellClick = useCallback((selectedPiece: ICell): void => {
-        if (selectedPiece.piece && !currentPiece) {
-            if (selectedPiece.piece.color === activeSide) {
-                setCurrentPiece(selectedPiece);
-            }
-        } else if (selectedPiece.isBlackCell && currentPiece) {
-            const commonParams = {
-                board,
-                currentPiece,
-                selectedPiece,
-                updateBoard,
-                activeSide,
-                setCurrentPiece,
-                setActiveSide,
-                setBoard,
-                setUpdateBoard,
-            };
-
-            if (canBeatAgain) {
-                if (canBeat(currentPiece, selectedPiece, board)) {
-                    setCanBeatAgain(false);
-                    beatPiece(
-                        commonParams,
-                        beatByWhite,
-                        beatByBlack,
-                        setCanBeatAgain,
-                        canBeatAgain,
-                    );
-                }
-            } else if (isMinePiece(selectedPiece, currentPiece)) {
-                if (isSamePiece(selectedPiece, selectedPiece)) {
-                    setCurrentPiece(null);
-                } else {
-                    setCurrentPiece(selectedPiece);
-                }
-            } else if (canMove(currentPiece, selectedPiece, board, activeSide)) {
-                movePiece(commonParams);
-            } else if (canBeat(currentPiece, selectedPiece, board)) {
-                beatPiece(
-                    commonParams,
-                    beatByWhite,
-                    beatByBlack,
-                    setUpdateBoard,
+        const isActiveCell = row === currentPiece?.row && col === currentPiece.col;
+        cells.push(
+            <div
+                onClick={() => onCellClick(currentCell)}
+                data-cell={`row-${row} col-${col}`}
+                className={clsx(
+                    styles.cell,
+                    {[styles.cellBlack]: isBlackCell},
+                    {[styles.cell_active]: isActiveCell},
+                    {[styles.blackTheme]: themeStore.theme === Theme.Black},
+                    {[styles.win95Theme]: themeStore.theme === Theme.Win95},
+                )}
+            >
+                {piece ? (
+                    <Piece
+                        color={piece.color}
+                        state={piece.state}
+                        themeStore={themeStore}
+                    />
+                ) : (
+                    <div style={{ color: "white" }}>
+                        {/*idx: {cell}*/}
+                        {/*row: {row}*/}
+                    </div>
                 )
-            }
-        }
-    }, [activeSide, board, currentPiece]);
-
-    const resetGame = useCallback((): void => {
-        setCurrentPiece(null);
-        setUpdateBoard(false);
-        setBoard(getBoard(BOARD_SIZE));
-
-        setActiveSide(PieceColor.White);
-        setCanBeatAgain(false);
-
-        gameStore.addBeatByBlack([]);
-        gameStore.addBeatByWhite([]);
-    }, []);
+                }
+            </div>
+        );
+    }
 
     return (
-        <div className={styles.wrapper}>
-            <Menu
-                resetGame={resetGame}
-                themeStore={themeStore}
-                gameStore={gameStore}
-            />
-            <div className={styles.header}>
-                {
-                    beatByBlack.length === NUMBER_OF_PIECES ||
-                    beatByWhite.length === NUMBER_OF_PIECES ? (
-                        <h2
-                            className={styles.title}
-                        >
-                            {showCongrats(beatByWhite)}
-                        </h2>
-
-                    ) : (
-                        <h2 className={styles.title}>
-                            Whose turn: {activeSide}
-                        </h2>
-                    )
-                }
-            </div>
-            <div className={styles.container}>
-                {screenWidth > SCREEN_SIZE.tablet && (
-                    <Score
-                        title="Beaten by black:"
-                        themeStore={themeStore}
-                        beatenPieces={beatByBlack}
-                    />
-                )}
-                <ShowBoard
-                    board={board}
-                    currentPiece={currentPiece}
-                    onCellClick={onCellClick}
-                    themeStore={themeStore}
-                />
-                {screenWidth > SCREEN_SIZE.tablet && (
-                    <Score
-                        title="Beaten by white:"
-                        themeStore={themeStore}
-                        beatenPieces={beatByWhite}
-                    />
-                )}
-            </div>
+        <div className={clsx(
+            styles.board,
+            {[styles.boardWin95]: themeStore.theme === Theme.Win95},
+        )}>
+            {cells}
         </div>
-    )
+    );
 });
 
 export default Board;

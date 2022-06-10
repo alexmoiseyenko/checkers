@@ -21,7 +21,7 @@ const getAllowedDirections = (boardSize: number): number[] => {
     return [firstAllowedDirection, secondAllowedDirection];
 };
 
-const isShouldBecomeKing = (currentPiece: ICell, selectedPiece: ICell): boolean => {
+const shouldBecomeKing = (currentPiece: ICell, selectedPiece: ICell): boolean => {
     if (!currentPiece) {
         return false;
     }
@@ -77,7 +77,7 @@ const movePiece = (
 
     if (
         currentPiece.piece?.state !== PieceState.King &&
-        isShouldBecomeKing(currentPiece, selectedPiece)
+        shouldBecomeKing(currentPiece, selectedPiece)
     ) {
         newBoard[newPosition] = {
             ...newBoard[newPosition],
@@ -134,8 +134,8 @@ const beatPiece = (
     );
 
     let positionBetween;
-    let isWillBeKing = currentPiece?.piece?.state === PieceState.Man &&
-        isShouldBecomeKing(currentPiece, selectedPiece);
+    let willBeKing = currentPiece?.piece?.state === PieceState.Man &&
+        shouldBecomeKing(currentPiece, selectedPiece);
 
     if (currentPiece?.piece?.state === PieceState.Man || canBeatPiece) {
         positionBetween = newPosition - ((newPosition - currentPosition) / 2);
@@ -146,7 +146,7 @@ const beatPiece = (
         positionBetween = newPosition - direction;
     }
 
-    if (isWillBeKing) {
+    if (willBeKing) {
         newBoard[newPosition] = {
             ...newBoard[newPosition],
             piece: {
@@ -184,7 +184,7 @@ const beatPiece = (
     setBoard(newBoard);
     setUpdateBoard(!updateBoard);
 
-    if (isWillBeKing) {
+    if (willBeKing) {
         setCurrentPiece(null);
         switchSide(activeSide, setActiveSide);
         return;
@@ -229,7 +229,7 @@ export {
     isMinePiece,
     isSamePiece,
     getAllowedDirections,
-    isShouldBecomeKing,
+    shouldBecomeKing,
     movePiece,
     beatPiece,
 }
