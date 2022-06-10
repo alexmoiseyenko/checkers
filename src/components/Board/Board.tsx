@@ -48,21 +48,25 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
                 setCurrentPiece(selectedPiece);
             }
         } else if (selectedPiece.isBlackCell && currentPiece) {
+            const commonParams = {
+                board,
+                currentPiece,
+                selectedPiece,
+                updateBoard,
+                activeSide,
+                setCurrentPiece,
+                setActiveSide,
+                setBoard,
+                setUpdateBoard,
+            };
+
             if (canBeatAgain) {
                 if (canBeat(currentPiece, selectedPiece, board)) {
                     setCanBeatAgain(false);
                     beatPiece(
-                        board,
-                        currentPiece,
-                        selectedPiece,
-                        updateBoard,
-                        activeSide,
+                        commonParams,
                         beatByWhite,
                         beatByBlack,
-                        setCurrentPiece,
-                        setActiveSide,
-                        setBoard,
-                        setUpdateBoard,
                         setCanBeatAgain,
                         canBeatAgain,
                     );
@@ -74,31 +78,13 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
                     setCurrentPiece(selectedPiece);
                 }
             } else if (canMove(currentPiece, selectedPiece, board, activeSide)) {
-                movePiece(
-                    board,
-                    currentPiece,
-                    selectedPiece,
-                    updateBoard,
-                    activeSide,
-                    setBoard,
-                    setCurrentPiece,
-                    setUpdateBoard,
-                    setActiveSide,
-                );
+                movePiece(commonParams);
             } else if (canBeat(currentPiece, selectedPiece, board)) {
                 beatPiece(
-                    board,
-                    currentPiece,
-                    selectedPiece,
-                    updateBoard,
-                    activeSide,
+                    commonParams,
                     beatByWhite,
                     beatByBlack,
-                    setCurrentPiece,
-                    setActiveSide,
-                    setBoard,
                     setUpdateBoard,
-                    setCanBeatAgain,
                 )
             }
         }

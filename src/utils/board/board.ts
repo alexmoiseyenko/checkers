@@ -33,16 +33,30 @@ const isShouldBecomeKing = (currentPiece: ICell, selectedPiece: ICell): boolean 
 };
 
 const movePiece = (
-    board: ICell[],
-    currentPiece: ICell,
-    selectedPiece: ICell,
-    updateBoard: boolean,
-    activeSide: PieceColor,
-    setBoard: (board: ICell[]) => void,
-    setCurrentPiece: (piece: ICell | null) => void,
-    setUpdateBoard: (updateBoard: boolean) => void,
-    setActiveSide: (activeSide: PieceColor) => void,
+    commonParams: {
+        board: ICell[],
+        currentPiece: ICell,
+        selectedPiece: ICell,
+        updateBoard: boolean,
+        activeSide: PieceColor,
+        setCurrentPiece: (piece: ICell | null) => void,
+        setActiveSide: (activeSide: PieceColor) => void,
+        setBoard: (board: ICell[]) => void,
+        setUpdateBoard: (updateBoard: boolean) => void,
+    },
 ): void => {
+    const {
+        board,
+        currentPiece,
+        selectedPiece,
+        updateBoard,
+        activeSide,
+        setCurrentPiece,
+        setActiveSide,
+        setBoard,
+        setUpdateBoard,
+    } = commonParams;
+
     const newBoard = Object.assign(board);
     const oldPosition = newBoard.findIndex((item: ICell) => (
         item.row === currentPiece?.row && item.col === currentPiece?.col)
@@ -81,20 +95,34 @@ const movePiece = (
 };
 
 const beatPiece = (
-    board: ICell[],
-    currentPiece: ICell,
-    selectedPiece: ICell,
-    updateBoard: boolean,
-    activeSide: PieceColor,
+    commonParams: {
+        board: ICell[],
+        currentPiece: ICell,
+        selectedPiece: ICell,
+        updateBoard: boolean,
+        activeSide: PieceColor,
+        setCurrentPiece: (piece: ICell | null) => void,
+        setActiveSide: (activeSide: PieceColor) => void,
+        setBoard: (board: ICell[]) => void,
+        setUpdateBoard: (updateBoard: boolean) => void,
+    },
     beatByWhite: ICell[],
     beatByBlack: ICell[],
-    setCurrentPiece: (piece: ICell | null) => void,
-    setActiveSide: (activeSide: PieceColor) => void,
-    setBoard: (board: ICell[]) => void,
-    setUpdateBoard: (updateBoard: boolean) => void,
     setCanBeatAgain: (canBeatAgain: boolean) => void,
     canBeatPiece?: boolean,
 ): void => {
+    const {
+        board,
+        currentPiece,
+        selectedPiece,
+        updateBoard,
+        activeSide,
+        setCurrentPiece,
+        setActiveSide,
+        setBoard,
+        setUpdateBoard,
+    } = commonParams;
+
     const newBoard = Object.assign(board);
 
     const currentPosition = newBoard.findIndex((item: ICell) => (
