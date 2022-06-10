@@ -25,13 +25,13 @@ export interface IBoard {
 const Board: React.FC<IBoard> = observer((props): JSX.Element => {
     const {
         themeStore,
-        gameStore: {
-            beatByBlack,
-            beatByWhite,
-            addBeatByBlack,
-            addBeatByWhite
-        }
+        gameStore,
     } = props;
+
+    const {
+        beatByBlack,
+        beatByWhite,
+    } = gameStore;
 
     const { width: screenWidth } = useWindowSize();
 
@@ -112,8 +112,8 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
         setActiveSide(PieceColor.White);
         setCanBeatAgain(false);
 
-        addBeatByBlack([]);
-        addBeatByWhite([]);
+        gameStore.addBeatByBlack([]);
+        gameStore.addBeatByWhite([]);
     }
 
     return (
@@ -121,6 +121,7 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
             <Menu
                 resetGame={resetGame}
                 themeStore={themeStore}
+                gameStore={gameStore}
             />
             <div className={styles.header}>
                 {

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../Board/Board.module.scss";
+import styles from "./Score.module.scss";
 import Piece from "../Piece/Piece";
 import ThemeStore from "../store/theme/ThemeStore";
 import {ICell} from "../../interfaces/interfaces";
@@ -18,8 +18,8 @@ const Score: React.FC<IScore> = (props): JSX.Element => {
     } = props;
 
     return (
-        <div>
-            <h2>
+        <div className={styles.score}>
+            <h2 className={styles.title}>
                 {title}
             </h2>
             <ul className={styles.beatenPieces}>
