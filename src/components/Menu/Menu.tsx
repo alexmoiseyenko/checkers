@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import styles from "./Menu.module.scss";
-import {Theme} from "../interfaces/Theme";
+import {Theme} from "../../enums/Theme";
 import {observer} from "mobx-react-lite";
-import ThemeStore from "../store/theme/ThemeStore";
+import ThemeStore from "../../store/theme/ThemeStore";
 import Button from "../Button/Button";
 import BurgerMenu from "../BurgerMenu/BurgerMenu";
 import clsx from "clsx";
 import {SCREEN_SIZE} from "../../utils/consts/consts";
 import Score from "../Score/Score";
 import useWindowSize from "../../utils/hooks/useWindowSize";
-import GameStore from "../store/game/GameStore";
+import GameStore from "../../store/game/GameStore";
 
 interface IMenu {
     resetGame: () => void;

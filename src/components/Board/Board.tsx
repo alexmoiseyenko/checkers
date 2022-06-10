@@ -9,10 +9,10 @@ import {beatPiece, isMinePiece, isSamePiece, movePiece} from "../../utils/board/
 import ShowBoard from "./ShowBoard";
 
 import styles from "./Board.module.scss";
-import ThemeStore from "../store/theme/ThemeStore";
+import ThemeStore from "../../store/theme/ThemeStore";
 import {observer} from "mobx-react-lite";
 import Menu from "../Menu/Menu";
-import GameStore from "../store/game/GameStore";
+import GameStore from "../../store/game/GameStore";
 import Score from "../Score/Score";
 import useWindowSize from "../../utils/hooks/useWindowSize";
 import {SCREEN_SIZE} from "../../utils/consts/consts";
@@ -128,13 +128,13 @@ const Board: React.FC<IBoard> = observer((props): JSX.Element => {
                     beatByBlack.length === NUMBER_OF_PIECES ||
                     beatByWhite.length === NUMBER_OF_PIECES ? (
                         <h2
-                            className={styles.header__title}
+                            className={styles.title}
                         >
                             {showCongrats(beatByWhite)}
                         </h2>
 
                     ) : (
-                        <h2 className={styles.header__title}>
+                        <h2 className={styles.title}>
                             Whose turn: {activeSide}
                         </h2>
                     )

@@ -5,8 +5,8 @@ import clsx from "clsx";
 import {PieceColor, PieceState} from "../../utils/consts/piece";
 import Crown from "../Crown/Crown";
 import {observer} from "mobx-react-lite";
-import {Theme} from "../interfaces/Theme";
-import ThemeStore from "../store/theme/ThemeStore";
+import {Theme} from "../../enums/Theme";
+import ThemeStore from "../../store/theme/ThemeStore";
 
 interface IPieceWithStore extends IPiece {
     themeStore: ThemeStore,
@@ -17,13 +17,13 @@ const Piece: React.FC<IPieceWithStore> = observer((props): JSX.Element => {
     return (
         <div className={clsx(
             styles.piece,
-            {[styles.piece_white]: color === PieceColor.White},
-            {[styles.win95Piece_white]: color === PieceColor.White &&
+            {[styles.pieceWhite]: color === PieceColor.White},
+            {[styles.win95Theme]: color === PieceColor.White &&
                 themeStore.theme === Theme.Win95},
         )}>
             <div className={clsx(
                 styles.pieceBorder,
-                {[styles.pieceBorder_white]: color === PieceColor.White},
+                {[styles.pieceBorderWhite]: color === PieceColor.White},
             )}>
                 {state === PieceState.King && (
                     <Crown width={30} height={30} fill={color === PieceColor.Black ? "#fff" : "#000"} />

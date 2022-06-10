@@ -5,8 +5,8 @@ import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
 import React from "react";
 import {ICell} from "../../interfaces/interfaces";
-import ThemeStore from "../store/theme/ThemeStore";
-import {Theme} from "../interfaces/Theme";
+import ThemeStore from "../../store/theme/ThemeStore";
+import {Theme} from "../../enums/Theme";
 
 interface IShowBoard {
     board: ICell[];
@@ -36,7 +36,7 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
                 data-cell={`row-${row} col-${col}`}
                 className={clsx(
                     styles.cell,
-                    {[styles.cell_black]: isBlackCell},
+                    {[styles.cellBlack]: isBlackCell},
                     {[styles.cell_active]: isActiveCell},
                     {[styles.blackTheme]: themeStore.theme === Theme.Black},
                     {[styles.win95Theme]: themeStore.theme === Theme.Win95},
@@ -61,8 +61,8 @@ const ShowBoard: React.FC<IShowBoard> = observer((props): JSX.Element => {
 
     return (
         <div className={clsx(
-            styles.boardWrapper,
-            {[styles.boardWrapperWin95]: themeStore.theme === Theme.Win95},
+            styles.board,
+            {[styles.boardWin95]: themeStore.theme === Theme.Win95},
         )}>
             {cells}
         </div>

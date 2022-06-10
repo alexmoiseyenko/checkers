@@ -16,19 +16,16 @@ const BurgerMenu: React.FC<IButton> = (props) => {
             className={styles.burgerMenu}
         >
             <div className={clsx(
-                styles.burgerMenu__item,
-                styles.burgerMenu__firstLine,
-                {[ styles.burgerMenu__firstLine_open ]: isOpen}
+                styles.burgerMenuLine,
+                {[ styles.burgerMenuLineActive ]: isOpen}
             )} />
             <div className={clsx(
-                styles.burgerMenu__item,
-                styles.burgerMenu__secondLine,
-                {[ styles.burgerMenu__secondLine_open ]: isOpen}
+                styles.burgerMenuLine,
+                {[ styles.burgerMenuSecondLineActive ]: isOpen}
             )} />
             <div className={clsx(
-                styles.burgerMenu__item,
-                styles.burgerMenu__thirdLine,
-                {[ styles.burgerMenu__thirdLine_open ]: isOpen}
+                styles.burgerMenuLine,
+                {[ styles.burgerMenuThirdLineActive ]: isOpen}
             )} />
         </div>
     );

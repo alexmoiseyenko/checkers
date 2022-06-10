@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Score.module.scss";
 import Piece from "../Piece/Piece";
-import ThemeStore from "../store/theme/ThemeStore";
+import ThemeStore from "../../store/theme/ThemeStore";
 import {ICell} from "../../interfaces/interfaces";
 
 interface IScore {

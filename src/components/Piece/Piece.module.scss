@@ -21,13 +21,15 @@
   }
 }
 
-.piece_white {
+.pieceWhite {
   background: #fff;
   border: 2px solid #000;
 }
 
-.win95Piece_white {
-  background: #ba0000;
+.win95Theme {
+  &.pieceWhite {
+    background: #ba0000;
+  }
 }
 
 .pieceBorder {
@@ -50,6 +52,6 @@
   }
 }
 
-.pieceBorder_white {
+.pieceBorderWhite {
   border: 2px solid #000;
 }

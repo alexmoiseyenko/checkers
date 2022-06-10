@@ -13,7 +13,7 @@
     }
 }
 
-.burgerMenu__item {
+.burgerMenuLine {
     width: 100%;
     height: 5px;
     background-color: #000;
@@ -22,14 +22,14 @@
     z-index: 2;
 }
 
-.burgerMenu__firstLine_open {
+.burgerMenuFirstLineActive {
     transform: translateY(20px) rotate(45deg);
 }
 
-.burgerMenu__secondLine_open {
+.burgerMenuSecondLineActive {
     display: none;
 }
 
-.burgerMenu__thirdLine_open {
+.burgerMenuThirdLineActive {
     transform: translateY(-20px) rotate(-45deg);
 }

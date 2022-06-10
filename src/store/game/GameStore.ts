@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import {ICell} from "../../../interfaces/interfaces";
+import {ICell} from "../../interfaces/interfaces";
 
 class GameStore {
     beatByBlack: ICell[] = [];

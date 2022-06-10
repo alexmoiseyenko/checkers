@@ -1,6 +1,6 @@
 @import "src/styles/variables";
 
-.boardWrapper {
+.board {
   width: 800px;
   height: 800px;
   display: grid;
@@ -27,12 +27,8 @@
   }
 }
 
-.boardWrapperWin95 {
+.boardWin95 {
   background: #e9d8f2;
-}
-
-.board {
-  position: relative;
 }
 
 .cell {
@@ -54,12 +50,12 @@
   }
 }
 
-.cell_black {
+.cellBlack {
   cursor: pointer;
 }
 
 .blackTheme {
-  &.cell_black {
+  &.cellBlack {
     background-color: #000;
 
     &.cell_active {
@@ -69,7 +65,7 @@
 }
 
 .win95Theme {
-  &.cell_black {
+  &.cellBlack {
     background-color: #6a0dad;
 
     &.cell_active {
@@ -108,7 +104,7 @@ ul {
   display: flex;
 }
 
-.header__title {
+.title {
   width: 100%;
 }
 
