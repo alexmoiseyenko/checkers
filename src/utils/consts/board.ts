@@ -1,9 +1,9 @@
-const BOARD_SIZE = 8;
-const CELL_SIZE = 100;
+const CELLS_PER_BOAR_SIDE = 8;
+const CELL_SIZE_PX = 100;
 const NUMBER_OF_PIECES = 12;
 
 export {
-    BOARD_SIZE,
-    CELL_SIZE,
+    CELLS_PER_BOAR_SIDE,
+    CELL_SIZE_PX,
     NUMBER_OF_PIECES,
 }

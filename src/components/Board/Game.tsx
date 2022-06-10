@@ -2,7 +2,7 @@ import React, {useCallback, useState} from "react";
 import {getBoard, getCongratsText} from "../../utils/common/common";
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor} from "../../utils/consts/piece";
-import {BOARD_SIZE, NUMBER_OF_PIECES} from "../../utils/consts/board";
+import {CELLS_PER_BOAR_SIDE, NUMBER_OF_PIECES} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
 import {beatPiece, isMinePiece, isSamePiece, movePiece} from "../../utils/board/board";
@@ -37,7 +37,7 @@ const Game: React.FC<IBoard> = observer((props): JSX.Element => {
 
     const [currentPiece, setCurrentPiece] = useState<ICell | null>(null);
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
-    const [board, setBoard] = useState<ICell[]>(getBoard(BOARD_SIZE));
+    const [board, setBoard] = useState<ICell[]>(getBoard(CELLS_PER_BOAR_SIDE));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
     const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
@@ -93,7 +93,7 @@ const Game: React.FC<IBoard> = observer((props): JSX.Element => {
     const resetGame = useCallback((): void => {
         setCurrentPiece(null);
         setUpdateBoard(false);
-        setBoard(getBoard(BOARD_SIZE));
+        setBoard(getBoard(CELLS_PER_BOAR_SIDE));
 
         setActiveSide(PieceColor.White);
         setCanBeatAgain(false);

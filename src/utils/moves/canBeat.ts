@@ -1,6 +1,6 @@
 import {ICell} from "../../interfaces/interfaces";
 import {PieceState} from "../consts/piece";
-import {BOARD_SIZE} from "../consts/board";
+import {CELLS_PER_BOAR_SIDE} from "../consts/board";
 import {getAllowedDirections, isMinePiece} from "../board/board";
 
 const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boolean => {
@@ -29,7 +29,7 @@ const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boo
         direction = (selectedPosition - currentPosition) / cellDifference;
     }
 
-    if (!getAllowedDirections(BOARD_SIZE).includes(Math.abs(direction))) {
+    if (!getAllowedDirections(CELLS_PER_BOAR_SIDE).includes(Math.abs(direction))) {
         return false;
     }
 

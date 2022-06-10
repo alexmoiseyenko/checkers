@@ -1,6 +1,6 @@
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/piece";
-import {BOARD_SIZE} from "../consts/board";
+import {CELLS_PER_BOAR_SIDE} from "../consts/board";
 import canBeat from "../moves/canBeat";
 import GameStore from "../../store/game/GameStore";
 
@@ -29,7 +29,7 @@ const shouldBecomeKing = (currentPiece: ICell, selectedPiece: ICell): boolean =>
         return true;
     }
 
-    return selectedPiece.row === BOARD_SIZE - 1 && currentPiece.piece?.color === PieceColor.Black;
+    return selectedPiece.row === CELLS_PER_BOAR_SIDE - 1 && currentPiece.piece?.color === PieceColor.Black;
 };
 
 const movePiece = (
@@ -192,10 +192,10 @@ const beatPiece = (
 
     let allowedPositions;
 
-    const topLeftCellPos = newPosition - (BOARD_SIZE - 1) * 2;
-    const topRightCellPos = newPosition - (BOARD_SIZE + 1) * 2;
-    const bottomLeftCellPos = newPosition + (BOARD_SIZE - 1) * 2;
-    const bottomRightCellPos = newPosition + (BOARD_SIZE + 1) * 2;
+    const topLeftCellPos = newPosition - (CELLS_PER_BOAR_SIDE - 1) * 2;
+    const topRightCellPos = newPosition - (CELLS_PER_BOAR_SIDE + 1) * 2;
+    const bottomLeftCellPos = newPosition + (CELLS_PER_BOAR_SIDE - 1) * 2;
+    const bottomRightCellPos = newPosition + (CELLS_PER_BOAR_SIDE + 1) * 2;
 
     allowedPositions = [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
 

@@ -1,6 +1,6 @@
 import {ICell} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/piece";
-import {BOARD_SIZE} from "../consts/board";
+import {CELLS_PER_BOAR_SIDE} from "../consts/board";
 import {getAllowedDirections} from "../board/board";
 
 const canMove = (
@@ -33,13 +33,13 @@ const canMove = (
 
     if (currentPiece.piece.state === PieceState.Man) {
         if (currentPiece.piece.color === PieceColor.White) {
-            const topLeftCellPos = currentPosition - BOARD_SIZE - 1;
-            const topRightCellPos = currentPosition - BOARD_SIZE + 1;
+            const topLeftCellPos = currentPosition - CELLS_PER_BOAR_SIDE - 1;
+            const topRightCellPos = currentPosition - CELLS_PER_BOAR_SIDE + 1;
 
             allowedPositions = [topLeftCellPos, topRightCellPos];
         } else if (currentPiece.piece.color === PieceColor.Black) {
-            const bottomLeftCellPos = currentPosition + BOARD_SIZE - 1;
-            const bottomRightCellPos = currentPosition + BOARD_SIZE + 1;
+            const bottomLeftCellPos = currentPosition + CELLS_PER_BOAR_SIDE - 1;
+            const bottomRightCellPos = currentPosition + CELLS_PER_BOAR_SIDE + 1;
 
             allowedPositions = [bottomLeftCellPos, bottomRightCellPos];
         }
@@ -50,7 +50,7 @@ const canMove = (
         const direction = (selectedPosition - currentPosition) / cellDifference;
         let allowedPosition = currentPosition + direction;
 
-        if (!getAllowedDirections(BOARD_SIZE).includes(Math.abs(direction))) {
+        if (!getAllowedDirections(CELLS_PER_BOAR_SIDE).includes(Math.abs(direction))) {
             return false;
         }
 
