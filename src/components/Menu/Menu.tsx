@@ -31,10 +31,12 @@ const Menu: React.FC<MenuProps> = observer((props) => {
 
     return (
         <div>
-            <BurgerMenu
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-            />
+            <div className={styles.burgerWrapper}>
+                <BurgerMenu
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                />
+            </div>
             <div className={clsx(
                 styles.menu,
                 {[styles.menuActive]: isOpen }
@@ -56,7 +58,7 @@ const Menu: React.FC<MenuProps> = observer((props) => {
                         Set win95 theme
                     </Button>
                 </div>
-                {screenWidth <= SCREEN_SIZE.tablet && (
+                {screenWidth <= SCREEN_SIZE.laptop && (
                     <div>
                         <Score
                             title="Beaten by black:"
