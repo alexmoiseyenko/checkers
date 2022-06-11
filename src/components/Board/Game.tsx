@@ -1,21 +1,28 @@
-import React, {useCallback, useState} from "react";
-import {getBoard, getCongratsText} from "../../utils/common/common";
-import {CellProps} from "../../interfaces/interfaces";
-import {PieceColor} from "../../utils/consts/piece";
-import {BOARD_SIZE_IN_CELLS, NUMBER_OF_PIECES} from "../../utils/consts/board";
+import React, { useCallback, useState } from "react";
+import { getBoard, getCongratsText } from "../../utils/common/common";
+import { CellProps } from "../../interfaces/interfaces";
+import { PieceColor } from "../../utils/consts/piece";
+import { BOARD_SIZE_IN_CELLS, NUMBER_OF_PIECES } from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
 import canMove from "../../utils/moves/canMove";
-import {beatPiece, isMinePiece, isSamePiece, movePiece} from "../../utils/board/board";
+import {
+    beatPiece,
+    canBeatPieceAgain,
+    isMinePiece,
+    isSamePiece,
+    movePiece,
+    switchSide
+} from "../../utils/board/board";
 import Board from "./Board";
 
 import styles from "./Board.module.scss";
 import ThemeStore from "../../store/theme/ThemeStore";
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import Menu from "../Menu/Menu";
 import GameStore from "../../store/game/GameStore";
 import Score from "../Score/Score";
 import useWindowSize from "../../utils/hooks/useWindowSize";
-import {SCREEN_SIZE} from "../../utils/consts/consts";
+import { SCREEN_SIZE } from "../../utils/consts/consts";
 
 export interface GameProps {
     themeStore: ThemeStore;
@@ -52,24 +59,34 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                 board,
                 currentPiece,
                 selectedPiece,
-                updateBoard,
-                activeSide,
-                setCurrentPiece,
-                setActiveSide,
-                setBoard,
-                setUpdateBoard,
             };
 
             if (canBeatAgain) {
                 if (canBeat(currentPiece, selectedPiece, board)) {
                     setCanBeatAgain(false);
-                    beatPiece(
+                    const newBoard = beatPiece(
                         commonParams,
                         beatByWhite,
                         beatByBlack,
-                        setCanBeatAgain,
                         canBeatAgain,
                     );
+
+                    setBoard(newBoard);
+                    setUpdateBoard(!updateBoard);
+
+                    const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
+
+                    if (canBeat) {
+                        setCanBeatAgain(true);
+                        setCurrentPiece({
+                            ...selectedPiece,
+                            piece: currentPiece.piece
+                        });
+                    } else {
+                        setCurrentPiece(null);
+
+                        switchSide(activeSide, setActiveSide);
+                    }
                 }
             } else if (isMinePiece(selectedPiece, currentPiece)) {
                 if (isSamePiece(selectedPiece, selectedPiece)) {
@@ -78,14 +95,33 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                     setCurrentPiece(selectedPiece);
                 }
             } else if (canMove(currentPiece, selectedPiece, board, activeSide)) {
-                movePiece(commonParams);
+                const updatedBoard = movePiece(commonParams);
+                setBoard(updatedBoard);
+                setCurrentPiece(null);
+                setUpdateBoard(!updateBoard);
+                switchSide(activeSide, setActiveSide);
             } else if (canBeat(currentPiece, selectedPiece, board)) {
-                beatPiece(
+                const newBoard = beatPiece(
                     commonParams,
                     beatByWhite,
                     beatByBlack,
-                    setUpdateBoard,
-                )
+                );
+
+                setBoard(newBoard);
+                setUpdateBoard(!updateBoard);
+
+                const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
+
+                if (canBeat) {
+                    setCanBeatAgain(true);
+                    setCurrentPiece({
+                        ...selectedPiece,
+                        piece: currentPiece.piece
+                    });
+                } else {
+                    setCurrentPiece(null);
+                    switchSide(activeSide, setActiveSide);
+                }
             }
         }
     }, [activeSide, board, currentPiece]);

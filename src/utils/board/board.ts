@@ -33,24 +33,12 @@ const movePiece = (
         board: CellProps[],
         currentPiece: CellProps,
         selectedPiece: CellProps,
-        updateBoard: boolean,
-        activeSide: PieceColor,
-        setCurrentPiece: (piece: CellProps | null) => void,
-        setActiveSide: (activeSide: PieceColor) => void,
-        setBoard: (board: CellProps[]) => void,
-        setUpdateBoard: (updateBoard: boolean) => void,
     },
-): void => {
+): CellProps[] => {
     const {
         board,
         currentPiece,
         selectedPiece,
-        updateBoard,
-        activeSide,
-        setCurrentPiece,
-        setActiveSide,
-        setBoard,
-        setUpdateBoard,
     } = commonParams;
 
     const newBoard = Object.assign(board);
@@ -84,10 +72,7 @@ const movePiece = (
         };
     }
 
-    setBoard(newBoard);
-    setCurrentPiece(null);
-    setUpdateBoard(!updateBoard);
-    switchSide(activeSide, setActiveSide);
+    return newBoard;
 };
 
 const beatPiece = (
@@ -95,28 +80,15 @@ const beatPiece = (
         board: CellProps[],
         currentPiece: CellProps,
         selectedPiece: CellProps,
-        updateBoard: boolean,
-        activeSide: PieceColor,
-        setCurrentPiece: (piece: CellProps | null) => void,
-        setActiveSide: (activeSide: PieceColor) => void,
-        setBoard: (board: CellProps[]) => void,
-        setUpdateBoard: (updateBoard: boolean) => void,
     },
     beatByWhite: PieceProps[],
     beatByBlack: PieceProps[],
-    setCanBeatAgain: (canBeatAgain: boolean) => void,
     canBeatPiece?: boolean,
-): void => {
+): CellProps[] => {
     const {
         board,
         currentPiece,
         selectedPiece,
-        updateBoard,
-        activeSide,
-        setCurrentPiece,
-        setActiveSide,
-        setBoard,
-        setUpdateBoard,
     } = commonParams;
 
     const newBoard = Object.assign(board);
@@ -177,14 +149,13 @@ const beatPiece = (
         piece: null,
     };
 
-    setBoard(newBoard);
-    setUpdateBoard(!updateBoard);
+    return newBoard;
+};
 
-    if (willBeKing) {
-        setCurrentPiece(null);
-        switchSide(activeSide, setActiveSide);
-        return;
-    }
+const canBeatPieceAgain = (selectedPiece: CellProps, board: CellProps[]): boolean => {
+    const newPosition = board.findIndex((item: CellProps) => (
+        item.row === selectedPiece?.row && item.col === selectedPiece?.col)
+    );
 
     let allowedPositions;
 
@@ -195,22 +166,13 @@ const beatPiece = (
 
     allowedPositions = [topLeftCellPos, topRightCellPos, bottomLeftCellPos, bottomRightCellPos];
 
-    let canBeatAgain = false;
-
     for (let i = 0; i < allowedPositions.length; i++) {
-        if (canBeat(newBoard[newPosition], newBoard[allowedPositions[i]], newBoard)) {
-            setCanBeatAgain(true);
-            setCurrentPiece(newBoard[newPosition]);
-            canBeatAgain = true;
-            return;
+        if (canBeat(board[newPosition], board[allowedPositions[i]], board)) {
+            return true;
         }
     }
 
-    if (!canBeatAgain) {
-        setCurrentPiece(null);
-
-        switchSide(activeSide, setActiveSide);
-    }
+    return false;
 };
 
 const switchSide = (activeSide: PieceColor, setActiveSide: (activeSide: PieceColor) => void): void => {
@@ -228,4 +190,6 @@ export {
     shouldBecomeKing,
     movePiece,
     beatPiece,
+    switchSide,
+    canBeatPieceAgain,
 }
