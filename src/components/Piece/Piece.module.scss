@@ -11,13 +11,28 @@
   border-radius: 50%;
 
   @media screen and (max-width: $desktop-xl) {
+    width: 28px;
+    height: 28px;
+  }
+
+  @media screen and (max-width: $desktop) {
+    width: 40px;
+    height: 40px;
+  }
+
+  @media screen and (max-width: $laptop) {
+    width: 60px;
+    height: 60px;
+  }
+
+  @media screen and (max-width: $tablet) {
     width: 40px;
     height: 40px;
   }
 
   @media screen and (max-width: $mobile) {
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -42,13 +57,28 @@
   width: 40px;
 
   @media screen and (max-width: $desktop-xl) {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media screen and (max-width: $desktop) {
+    width: 26px;
+    height: 26px;
+  }
+
+  @media screen and (max-width: $laptop) {
+    width: 40px;
+    height: 40px;
+  }
+
+  @media screen and (max-width: $tablet) {
     width: 26px;
     height: 26px;
   }
 
   @media screen and (max-width: $mobile) {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
   }
 }
 

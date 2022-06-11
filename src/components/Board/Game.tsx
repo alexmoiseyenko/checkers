@@ -127,7 +127,7 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                 }
             </div>
             <div className={styles.container}>
-                {screenWidth > SCREEN_SIZE.tablet && (
+                {screenWidth > SCREEN_SIZE.laptop && (
                     <Score
                         title="Beaten by black:"
                         themeStore={themeStore}
@@ -140,7 +140,7 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                     onCellClick={onCellClick}
                     themeStore={themeStore}
                 />
-                {screenWidth > SCREEN_SIZE.tablet && (
+                {screenWidth > SCREEN_SIZE.laptop && (
                     <Score
                         title="Beaten by white:"
                         themeStore={themeStore}

@@ -17,7 +17,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = (props) => {
         >
             <div className={clsx(
                 styles.burgerMenuLine,
-                {[ styles.burgerMenuLineActive ]: isOpen}
+                {[ styles.burgerMenuFirstLineActive ]: isOpen}
             )} />
             <div className={clsx(
                 styles.burgerMenuLine,
