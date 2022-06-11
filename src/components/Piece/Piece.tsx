@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Piece.module.scss";
-import {IPiece} from "../../interfaces/interfaces";
+import {PieceProps} from "../../interfaces/interfaces";
 import clsx from "clsx";
 import {PieceColor, PieceState} from "../../utils/consts/piece";
 import Crown from "../Crown/Crown";
@@ -8,11 +8,11 @@ import {observer} from "mobx-react-lite";
 import {Theme} from "../../enums/Theme";
 import ThemeStore from "../../store/theme/ThemeStore";
 
-interface IPieceWithStore extends IPiece {
+interface PiecePropsWithStore extends PieceProps {
     themeStore: ThemeStore,
 }
 
-const Piece: React.FC<IPieceWithStore> = observer((props): JSX.Element => {
+const Piece: React.FC<PiecePropsWithStore> = observer((props): JSX.Element => {
     const { color, state, themeStore } = props;
     return (
         <div className={clsx(

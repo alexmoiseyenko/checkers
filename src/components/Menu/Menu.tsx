@@ -11,13 +11,13 @@ import Score from "../Score/Score";
 import useWindowSize from "../../utils/hooks/useWindowSize";
 import GameStore from "../../store/game/GameStore";
 
-interface IMenu {
+interface MenuProps {
     resetGame: () => void;
     themeStore: ThemeStore;
     gameStore: GameStore;
 }
 
-const Menu: React.FC<IMenu> = observer((props) => {
+const Menu: React.FC<MenuProps> = observer((props) => {
     const { resetGame, themeStore, gameStore } = props;
 
     const {

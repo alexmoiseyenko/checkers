@@ -1,18 +1,18 @@
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 import {PieceState} from "../consts/piece";
 import {CELLS_PER_BOAR_SIDE} from "../consts/board";
 import {getAllowedDirections, isMinePiece} from "../board/board";
 
-const canBeat = (currentPiece: ICell, selectedPiece: ICell, board: ICell[]): boolean => {
+const canBeat = (currentPiece: CellProps, selectedPiece: CellProps, board: CellProps[]): boolean => {
     if (!currentPiece?.piece) {
         return false;
     }
 
-    const currentPosition = board.findIndex((item: ICell) => (
+    const currentPosition = board.findIndex((item: CellProps) => (
         item.row === currentPiece?.row && item.col === currentPiece?.col)
     );
 
-    const selectedPosition = board.findIndex((item: ICell) => (
+    const selectedPosition = board.findIndex((item: CellProps) => (
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
     );
 

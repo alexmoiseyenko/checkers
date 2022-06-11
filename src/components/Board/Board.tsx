@@ -4,18 +4,18 @@ import {observer} from "mobx-react-lite";
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
 import React from "react";
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 import ThemeStore from "../../store/theme/ThemeStore";
 import {Theme} from "../../enums/Theme";
 
-interface IShowBoard {
-    board: ICell[];
-    currentPiece: ICell | null;
-    onCellClick: (cell: ICell) => void;
+interface BoardProps {
+    board: CellProps[];
+    currentPiece: CellProps | null;
+    onCellClick: (cell: CellProps) => void;
     themeStore: ThemeStore;
 }
 
-const Board: React.FC<IShowBoard> = observer((props): JSX.Element => {
+const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
     const {
         board,
         currentPiece,

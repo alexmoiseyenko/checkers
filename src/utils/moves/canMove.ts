@@ -1,12 +1,12 @@
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/piece";
 import {CELLS_PER_BOAR_SIDE} from "../consts/board";
 import {getAllowedDirections} from "../board/board";
 
 const canMove = (
-    currentPiece: ICell,
-    selectedPiece: ICell,
-    board: ICell[],
+    currentPiece: CellProps,
+    selectedPiece: CellProps,
+    board: CellProps[],
     activeSide: PieceColor
 ): boolean => {
     if (!currentPiece?.piece) {
@@ -21,11 +21,11 @@ const canMove = (
         return false;
     }
 
-    const currentPosition = board.findIndex((item: ICell) => (
+    const currentPosition = board.findIndex((item: CellProps) => (
         item.row === currentPiece?.row && item.col === currentPiece?.col)
     );
 
-    const selectedPosition = board.findIndex((item: ICell) => (
+    const selectedPosition = board.findIndex((item: CellProps) => (
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
     );
 

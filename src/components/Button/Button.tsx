@@ -2,14 +2,14 @@ import React from "react";
 import styles from "./Button.module.scss";
 import clsx from "clsx";
 
-interface IButton {
+interface ButtonProps {
     className?: string;
     onClick?: () => void;
     children?: React.ReactNode;
 }
 
-const Button: React.FC<IButton> = (props) => {
-    const { className, onClick, children,  } = props;
+const Button: React.FC<ButtonProps> = (props) => {
+    const { className, onClick, children } = props;
     return (
         <button
             className={clsx(

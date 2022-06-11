@@ -1,4 +1,4 @@
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 import {PieceColor, PieceState} from "../consts/piece";
 import {CELLS_PER_BOAR_SIDE} from "../consts/board";
 import canBeat from "../moves/canBeat";
@@ -6,11 +6,11 @@ import GameStore from "../../store/game/GameStore";
 
 const gameStore = new GameStore();
 
-const isMinePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
+const isMinePiece = (currentPiece: CellProps, selectedPiece: CellProps): boolean => {
     return currentPiece.piece?.color === selectedPiece.piece?.color;
 };
 
-const isSamePiece = (currentPiece: ICell, selectedPiece: ICell): boolean => {
+const isSamePiece = (currentPiece: CellProps, selectedPiece: CellProps): boolean => {
     return currentPiece.row === selectedPiece.row && currentPiece.col === selectedPiece.col;
 };
 
@@ -21,7 +21,7 @@ const getAllowedDirections = (boardSize: number): number[] => {
     return [firstAllowedDirection, secondAllowedDirection];
 };
 
-const shouldBecomeKing = (currentPiece: ICell, selectedPiece: ICell): boolean => {
+const shouldBecomeKing = (currentPiece: CellProps, selectedPiece: CellProps): boolean => {
     if (!currentPiece) {
         return false;
     }
@@ -34,14 +34,14 @@ const shouldBecomeKing = (currentPiece: ICell, selectedPiece: ICell): boolean =>
 
 const movePiece = (
     commonParams: {
-        board: ICell[],
-        currentPiece: ICell,
-        selectedPiece: ICell,
+        board: CellProps[],
+        currentPiece: CellProps,
+        selectedPiece: CellProps,
         updateBoard: boolean,
         activeSide: PieceColor,
-        setCurrentPiece: (piece: ICell | null) => void,
+        setCurrentPiece: (piece: CellProps | null) => void,
         setActiveSide: (activeSide: PieceColor) => void,
-        setBoard: (board: ICell[]) => void,
+        setBoard: (board: CellProps[]) => void,
         setUpdateBoard: (updateBoard: boolean) => void,
     },
 ): void => {
@@ -58,10 +58,10 @@ const movePiece = (
     } = commonParams;
 
     const newBoard = Object.assign(board);
-    const oldPosition = newBoard.findIndex((item: ICell) => (
+    const oldPosition = newBoard.findIndex((item: CellProps) => (
         item.row === currentPiece?.row && item.col === currentPiece?.col)
     );
-    const newPosition = newBoard.findIndex((item: ICell) => (
+    const newPosition = newBoard.findIndex((item: CellProps) => (
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
     );
 
@@ -96,18 +96,18 @@ const movePiece = (
 
 const beatPiece = (
     commonParams: {
-        board: ICell[],
-        currentPiece: ICell,
-        selectedPiece: ICell,
+        board: CellProps[],
+        currentPiece: CellProps,
+        selectedPiece: CellProps,
         updateBoard: boolean,
         activeSide: PieceColor,
-        setCurrentPiece: (piece: ICell | null) => void,
+        setCurrentPiece: (piece: CellProps | null) => void,
         setActiveSide: (activeSide: PieceColor) => void,
-        setBoard: (board: ICell[]) => void,
+        setBoard: (board: CellProps[]) => void,
         setUpdateBoard: (updateBoard: boolean) => void,
     },
-    beatByWhite: ICell[],
-    beatByBlack: ICell[],
+    beatByWhite: CellProps[],
+    beatByBlack: CellProps[],
     setCanBeatAgain: (canBeatAgain: boolean) => void,
     canBeatPiece?: boolean,
 ): void => {
@@ -125,11 +125,11 @@ const beatPiece = (
 
     const newBoard = Object.assign(board);
 
-    const currentPosition = newBoard.findIndex((item: ICell) => (
+    const currentPosition = newBoard.findIndex((item: CellProps) => (
         item.row === currentPiece?.row && item.col === currentPiece?.col)
     );
 
-    const newPosition = newBoard.findIndex((item: ICell) => (
+    const newPosition = newBoard.findIndex((item: CellProps) => (
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
     );
 

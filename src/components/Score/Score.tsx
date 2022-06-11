@@ -2,15 +2,15 @@ import React from "react";
 import styles from "./Score.module.scss";
 import Piece from "../Piece/Piece";
 import ThemeStore from "../../store/theme/ThemeStore";
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 
-interface IScore {
+interface ScoreProps {
     title: string;
     themeStore: ThemeStore;
-    beatenPieces: ICell[];
+    beatenPieces: CellProps[];
 }
 
-const Score: React.FC<IScore> = (props): JSX.Element => {
+const Score: React.FC<ScoreProps> = (props): JSX.Element => {
     const {
         title,
         themeStore,

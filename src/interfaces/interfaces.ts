@@ -1,13 +1,13 @@
 import {PieceColor, PieceState} from "../utils/consts/piece";
 
-export interface IPiece {
+export interface PieceProps {
     state: PieceState,
     color: PieceColor,
 }
 
-export interface ICell {
+export interface CellProps {
     row: number;
     col: number;
     isBlackCell: boolean;
-    piece: IPiece | null;
+    piece: PieceProps | null;
 }

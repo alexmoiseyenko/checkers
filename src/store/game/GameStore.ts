@@ -1,19 +1,19 @@
 import { makeAutoObservable } from "mobx";
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 
 class GameStore {
-    beatByBlack: ICell[] = [];
-    beatByWhite: ICell[] = [];
+    beatByBlack: CellProps[] = [];
+    beatByWhite: CellProps[] = [];
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    addBeatByBlack(beatenPieces: ICell[]) {
+    addBeatByBlack(beatenPieces: CellProps[]) {
         this.beatByBlack = beatenPieces;
     }
 
-    addBeatByWhite(beatenPieces: ICell[]) {
+    addBeatByWhite(beatenPieces: CellProps[]) {
         this.beatByWhite = beatenPieces;
     }
 }

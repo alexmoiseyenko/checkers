@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from "react";
 import {getBoard, getCongratsText} from "../../utils/common/common";
-import {ICell} from "../../interfaces/interfaces";
+import {CellProps} from "../../interfaces/interfaces";
 import {PieceColor} from "../../utils/consts/piece";
 import {CELLS_PER_BOAR_SIDE, NUMBER_OF_PIECES} from "../../utils/consts/board";
 import canBeat from "../../utils/moves/canBeat";
@@ -17,12 +17,12 @@ import Score from "../Score/Score";
 import useWindowSize from "../../utils/hooks/useWindowSize";
 import {SCREEN_SIZE} from "../../utils/consts/consts";
 
-export interface IBoard {
+export interface GameProps {
     themeStore: ThemeStore;
     gameStore: GameStore;
 }
 
-const Game: React.FC<IBoard> = observer((props): JSX.Element => {
+const Game: React.FC<GameProps> = observer((props): JSX.Element => {
     const {
         themeStore,
         gameStore,
@@ -35,14 +35,14 @@ const Game: React.FC<IBoard> = observer((props): JSX.Element => {
 
     const { width: screenWidth } = useWindowSize();
 
-    const [currentPiece, setCurrentPiece] = useState<ICell | null>(null);
+    const [currentPiece, setCurrentPiece] = useState<CellProps | null>(null);
     const [updateBoard, setUpdateBoard] = useState<boolean>(false);
-    const [board, setBoard] = useState<ICell[]>(getBoard(CELLS_PER_BOAR_SIDE));
+    const [board, setBoard] = useState<CellProps[]>(getBoard(CELLS_PER_BOAR_SIDE));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
     const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
 
-    const onCellClick = useCallback((selectedPiece: ICell): void => {
+    const onCellClick = useCallback((selectedPiece: CellProps): void => {
         if (selectedPiece.piece && !currentPiece) {
             if (selectedPiece.piece.color === activeSide) {
                 setCurrentPiece(selectedPiece);

@@ -2,12 +2,12 @@ import React from "react";
 import styles from "./BurgerMenu.module.scss";
 import clsx from "clsx";
 
-interface IButton {
+interface BurgerMenuProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
 
-const BurgerMenu: React.FC<IButton> = (props) => {
+const BurgerMenu: React.FC<BurgerMenuProps> = (props) => {
     const { isOpen, setIsOpen } = props;
 
     return (

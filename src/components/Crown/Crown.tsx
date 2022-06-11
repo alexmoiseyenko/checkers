@@ -1,12 +1,12 @@
 import React from "react"
 
-interface ICrown {
+interface CrownProps {
     width: number;
     height: number;
     fill: string;
 }
 
-const Crown: React.FC<ICrown> = (props) => (
+const Crown: React.FC<CrownProps> = (props) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1280 815"
