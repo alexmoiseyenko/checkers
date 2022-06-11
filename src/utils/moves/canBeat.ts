@@ -4,7 +4,7 @@ import {BOARD_SIZE_IN_CELLS} from "../consts/board";
 import {getAllowedDirections, isMinePiece} from "../board/board";
 
 const canBeat = (currentPiece: CellProps, selectedPiece: CellProps, board: CellProps[]): boolean => {
-    if (!currentPiece?.piece) {
+    if (!currentPiece?.piece || selectedPiece?.piece) {
         return false;
     }
 
@@ -27,6 +27,26 @@ const canBeat = (currentPiece: CellProps, selectedPiece: CellProps, board: CellP
     } else {
         const cellDifference = Math.abs(currentPiece.row - selectedPiece.row);
         direction = (selectedPosition - currentPosition) / cellDifference;
+
+        let alienPieceCounter = 0;
+
+        for (let i = 0; i < cellDifference; i++) {
+            const nextCell = board[currentPosition + (direction * (i + 1))];
+
+            if (nextCell.piece && isMinePiece(currentPiece, nextCell)) {
+                return false;
+            }
+
+            if (nextCell.piece && !isMinePiece(currentPiece, nextCell)) {
+                alienPieceCounter++;
+
+                if (alienPieceCounter > 1) {
+                    return false;
+                }
+            }
+        }
+
+        return alienPieceCounter === 1;
     }
 
     if (!getAllowedDirections(BOARD_SIZE_IN_CELLS).includes(Math.abs(direction))) {

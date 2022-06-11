@@ -111,7 +111,13 @@ const beatPiece = (
         const cellDifference = Math.abs(selectedPiece.row - currentPiece.row);
         const direction = (newPosition - currentPosition) / cellDifference;
 
-        positionBetween = newPosition - direction;
+        for (let i = 0; i < cellDifference; i++) {
+            const nextCellPosition = currentPosition + (direction * (i + 1));
+
+            if (board[nextCellPosition].piece) {
+                positionBetween = nextCellPosition;
+            }
+        }
     }
 
     if (willBeKing) {
