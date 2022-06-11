@@ -1,11 +1,11 @@
 @import "src/styles/variables";
 
 .button {
-    margin-right: 10px !important;
+    margin-right: 10px;
 
     @media screen and (max-width: $tablet) {
         width: 200px;
-        margin-bottom: 10px !important;
+        margin-bottom: 10px;
     }
 }
 

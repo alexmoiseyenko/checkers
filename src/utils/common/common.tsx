@@ -1,6 +1,6 @@
 import { PieceColor, PieceState } from "../consts/piece";
-import {NUMBER_OF_PIECES} from "../consts/board";
-import {CellProps} from "../../interfaces/interfaces";
+import { NUMBER_OF_PIECES } from "../consts/board";
+import { PieceProps } from "../../interfaces/interfaces";
 
 const getBoard = (size: number) => {
     const board = [];
@@ -32,7 +32,7 @@ const getBoard = (size: number) => {
     return board;
 };
 
-const getCongratsText = (beatByWhite: CellProps[]): string => {
+const getCongratsText = (beatByWhite: PieceProps[]): string => {
     if (beatByWhite.length === NUMBER_OF_PIECES) {
         return "Whites win!";
     }

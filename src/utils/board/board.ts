@@ -1,6 +1,6 @@
-import {CellProps} from "../../interfaces/interfaces";
-import {PieceColor, PieceState} from "../consts/piece";
-import {CELLS_PER_BOAR_SIDE} from "../consts/board";
+import { CellProps, PieceProps } from "../../interfaces/interfaces";
+import { PieceColor, PieceState } from "../consts/piece";
+import { CELLS_PER_BOAR_SIDE } from "../consts/board";
 import canBeat from "../moves/canBeat";
 import GameStore from "../../store/game/GameStore";
 
@@ -106,8 +106,8 @@ const beatPiece = (
         setBoard: (board: CellProps[]) => void,
         setUpdateBoard: (updateBoard: boolean) => void,
     },
-    beatByWhite: CellProps[],
-    beatByBlack: CellProps[],
+    beatByWhite: PieceProps[],
+    beatByBlack: PieceProps[],
     setCanBeatAgain: (canBeatAgain: boolean) => void,
     canBeatPiece?: boolean,
 ): void => {
@@ -163,11 +163,11 @@ const beatPiece = (
 
     if (currentPiece.piece?.color === PieceColor.White) {
         const beatByWhites = Object.assign(beatByWhite);
-        beatByWhites.push(board[positionBetween]);
+        beatByWhites.push(board[positionBetween].piece);
         gameStore.addBeatByWhite(beatByWhites);
     } else {
         const beatByBlackes = Object.assign(beatByBlack);
-        beatByBlackes.push(board[positionBetween]);
+        beatByBlackes.push(board[positionBetween].piece);
         gameStore.addBeatByBlack(beatByBlackes);
     }
 

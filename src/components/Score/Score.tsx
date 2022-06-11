@@ -2,12 +2,12 @@ import React from "react";
 import styles from "./Score.module.scss";
 import Piece from "../Piece/Piece";
 import ThemeStore from "../../store/theme/ThemeStore";
-import {CellProps} from "../../interfaces/interfaces";
+import { PieceProps } from "../../interfaces/interfaces";
 
 interface ScoreProps {
     title: string;
     themeStore: ThemeStore;
-    beatenPieces: CellProps[];
+    beatenPieces: PieceProps[];
 }
 
 const Score: React.FC<ScoreProps> = (props): JSX.Element => {
@@ -23,12 +23,13 @@ const Score: React.FC<ScoreProps> = (props): JSX.Element => {
                 {title}
             </h2>
             <ul className={styles.beatenPieces}>
-                {beatenPieces.map(({ piece }) => {
-                    return piece && (
+                {beatenPieces.map((piece) => {
+                    const { color, state } = piece;
+                    return (
                         <li>
                             <Piece
-                                color={piece.color}
-                                state={piece.state}
+                                color={color}
+                                state={state}
                                 themeStore={themeStore}
                             />
                         </li>
