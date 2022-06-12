@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { getBoard, getCongratsText } from "../../utils/common/common";
 import { CellProps } from "../../interfaces/interfaces";
 import { PieceColor } from "../../utils/consts/piece";
@@ -23,6 +23,7 @@ import GameStore from "../../store/game/GameStore";
 import Score from "../Score/Score";
 import useWindowSize from "../../utils/hooks/useWindowSize";
 import { SCREEN_SIZE } from "../../utils/consts/consts";
+import mustBeat from "../../utils/moves/mustBeat";
 
 export interface GameProps {
     themeStore: ThemeStore;
@@ -47,10 +48,61 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
     const [board, setBoard] = useState<CellProps[]>(getBoard(BOARD_SIZE_IN_CELLS));
 
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
-    const [canBeatAgain, setCanBeatAgain] = useState<boolean>(false);
+    const [mustBeatAgain, setMustBeatAgain] = useState<boolean>(false);
+
+    useEffect(() => {
+        for (let i = 0; i < board.length; i++) {
+            const currentPiece = board[i];
+            if (currentPiece?.piece &&
+                currentPiece.piece.color === activeSide &&
+                mustBeat(currentPiece, board)
+            ) {
+                setMustBeatAgain(true);
+            }
+        }
+    }, [updateBoard]);
 
     const onCellClick = useCallback((selectedPiece: CellProps): void => {
-        if (selectedPiece.piece && !currentPiece) {
+        if (mustBeatAgain) {
+            const shouldSetPieceActive = selectedPiece.piece &&
+                selectedPiece.piece.color === activeSide &&
+                mustBeat(selectedPiece, board)
+            if (shouldSetPieceActive) {
+                setCurrentPiece(selectedPiece);
+            } else if (currentPiece && canBeat(currentPiece, selectedPiece, board)) {
+                setMustBeatAgain(false);
+
+                const commonParams = {
+                    board,
+                    currentPiece,
+                    selectedPiece,
+                };
+
+                const newBoard = beatPiece(
+                    commonParams,
+                    beatByWhite,
+                    beatByBlack,
+                    mustBeatAgain,
+                );
+
+                setBoard(newBoard);
+                setUpdateBoard(!updateBoard);
+
+                const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
+
+                if (canBeat) {
+                    setMustBeatAgain(true);
+                    setCurrentPiece({
+                        ...selectedPiece,
+                        piece: currentPiece.piece
+                    });
+                } else {
+                    setCurrentPiece(null);
+
+                    switchSide(activeSide, setActiveSide);
+                }
+            }
+        } else if (selectedPiece.piece && !currentPiece) {
             if (selectedPiece.piece.color === activeSide) {
                 setCurrentPiece(selectedPiece);
             }
@@ -61,14 +113,20 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                 selectedPiece,
             };
 
-            if (canBeatAgain) {
+            if (isMinePiece(selectedPiece, currentPiece)) {
+                if (isSamePiece(selectedPiece, currentPiece)) {
+                    setCurrentPiece(null);
+                } else {
+                    setCurrentPiece(selectedPiece);
+                }
+            } else if (mustBeatAgain) {
                 if (canBeat(currentPiece, selectedPiece, board)) {
-                    setCanBeatAgain(false);
+                    setMustBeatAgain(false);
                     const newBoard = beatPiece(
                         commonParams,
                         beatByWhite,
                         beatByBlack,
-                        canBeatAgain,
+                        mustBeatAgain,
                     );
 
                     setBoard(newBoard);
@@ -77,7 +135,7 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                     const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
 
                     if (canBeat) {
-                        setCanBeatAgain(true);
+                        setMustBeatAgain(true);
                         setCurrentPiece({
                             ...selectedPiece,
                             piece: currentPiece.piece
@@ -87,12 +145,6 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
 
                         switchSide(activeSide, setActiveSide);
                     }
-                }
-            } else if (isMinePiece(selectedPiece, currentPiece)) {
-                if (isSamePiece(selectedPiece, selectedPiece)) {
-                    setCurrentPiece(null);
-                } else {
-                    setCurrentPiece(selectedPiece);
                 }
             } else if (canMove(currentPiece, selectedPiece, board, activeSide)) {
                 const updatedBoard = movePiece(commonParams);
@@ -113,7 +165,7 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                 const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
 
                 if (canBeat) {
-                    setCanBeatAgain(true);
+                    setMustBeatAgain(true);
                     setCurrentPiece({
                         ...selectedPiece,
                         piece: currentPiece.piece
@@ -124,7 +176,7 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
                 }
             }
         }
-    }, [activeSide, board, currentPiece]);
+    }, [activeSide, updateBoard, board, currentPiece, mustBeatAgain]);
 
     const resetGame = useCallback((): void => {
         setCurrentPiece(null);
@@ -132,7 +184,7 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
         setBoard(getBoard(BOARD_SIZE_IN_CELLS));
 
         setActiveSide(PieceColor.White);
-        setCanBeatAgain(false);
+        setMustBeatAgain(false);
 
         gameStore.addBeatByBlack([]);
         gameStore.addBeatByWhite([]);
