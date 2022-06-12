@@ -22,7 +22,7 @@ const canMove = (
     }
 
     const currentPosition = board.findIndex((item: CellProps) => (
-        item.row === currentPiece?.row && item.col === currentPiece?.col)
+        item.row === currentPiece.row && item.col === currentPiece.col)
     );
 
     const selectedPosition = board.findIndex((item: CellProps) => (

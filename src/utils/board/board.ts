@@ -43,7 +43,7 @@ const movePiece = (
 
     const newBoard = Object.assign(board);
     const oldPosition = newBoard.findIndex((item: CellProps) => (
-        item.row === currentPiece?.row && item.col === currentPiece?.col)
+        item.row === currentPiece.row && item.col === currentPiece.col)
     );
     const newPosition = newBoard.findIndex((item: CellProps) => (
         item.row === selectedPiece?.row && item.col === selectedPiece?.col)
@@ -94,7 +94,7 @@ const beatPiece = (
     const newBoard = Object.assign(board);
 
     const currentPosition = newBoard.findIndex((item: CellProps) => (
-        item.row === currentPiece?.row && item.col === currentPiece?.col)
+        item.row === currentPiece.row && item.col === currentPiece.col)
     );
 
     const newPosition = newBoard.findIndex((item: CellProps) => (

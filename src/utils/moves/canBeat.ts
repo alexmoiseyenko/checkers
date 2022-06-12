@@ -9,7 +9,7 @@ const canBeat = (currentPiece: CellProps, selectedPiece: CellProps, board: CellP
     }
 
     const currentPosition = board.findIndex((item: CellProps) => (
-        item.row === currentPiece?.row && item.col === currentPiece?.col)
+        item.row === currentPiece.row && item.col === currentPiece.col)
     );
 
     const selectedPosition = board.findIndex((item: CellProps) => (

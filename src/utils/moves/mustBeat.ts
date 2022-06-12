@@ -4,7 +4,7 @@ import canBeat from "./canBeat";
 
 const mustBeat = (currentPiece: CellProps, board: CellProps[]): boolean => {
     const currentPosition = board.findIndex((item: CellProps) => (
-        item.row === currentPiece?.row && item.col === currentPiece?.col)
+        item.row === currentPiece.row && item.col === currentPiece.col)
     );
 
     let allowedPositions: number[] = [];
