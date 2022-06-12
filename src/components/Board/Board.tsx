@@ -3,20 +3,10 @@ import {observer} from "mobx-react-lite";
 
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
-import React, {useMemo} from "react";
+import React from "react";
 import {CellProps} from "../../interfaces/interfaces";
 import ThemeStore from "../../store/theme/ThemeStore";
 import {Theme} from "../../enums/Theme";
-import {
-    CELL_SIZE_DESKTOP_PX,
-    CELL_SIZE_DESKTOP_XL_PX,
-    CELL_SIZE_LAPTOP_PX,
-    CELL_SIZE_MOBILE_PX,
-    CELL_SIZE_PX,
-    CELL_SIZE_TABLET_PX
-} from "../../utils/consts/board";
-import useWindowSize from "../../utils/hooks/useWindowSize";
-import {SCREEN_SIZE} from "../../utils/consts/consts";
 
 interface BoardProps {
     board: CellProps[];
@@ -24,6 +14,8 @@ interface BoardProps {
     onCellClick: (cell: CellProps) => void;
     themeStore: ThemeStore;
 }
+
+const CELL_SIZE_IN_PERCENTS = 12.5;
 
 const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
     const {
@@ -33,36 +25,10 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
         themeStore,
     } = props;
 
-    const { width: screenWidth } = useWindowSize();
-
     const cells: JSX.Element[] = [];
 
     let colPosition = 0;
     let rowPosition = 0;
-
-    const cellSize = useMemo(() => {
-        if (screenWidth <= SCREEN_SIZE.mobile) {
-            return CELL_SIZE_MOBILE_PX;
-        }
-
-        if (screenWidth <= SCREEN_SIZE.tablet) {
-            return CELL_SIZE_TABLET_PX;
-        }
-
-        if (screenWidth <= SCREEN_SIZE.laptop) {
-            return CELL_SIZE_LAPTOP_PX;
-        }
-
-        if (screenWidth <= SCREEN_SIZE.desktop) {
-            return CELL_SIZE_DESKTOP_PX;
-        }
-
-        if (screenWidth <= SCREEN_SIZE.desktopXL) {
-            return CELL_SIZE_DESKTOP_XL_PX;
-        }
-
-        return CELL_SIZE_PX;
-    }, [screenWidth]);
 
     for (let cell = 0; cell < board.length; cell++) {
         const currentCell = board[cell];
@@ -76,8 +42,8 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
                     onClick={() => onCellClick(currentCell)}
                     data-cell={`row-${row} col-${col}`}
                     style={{
-                        top: `${rowPosition}px`,
-                        left: `${colPosition}px`,
+                        top: `${rowPosition}%`,
+                        left: `${colPosition}%`,
                     }}
                     className={clsx(
                         styles.cell,
@@ -100,9 +66,9 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
 
         if (currentCell.col >= Math.sqrt(board.length) - 1) {
             colPosition = 0;
-            rowPosition += cellSize;
+            rowPosition += CELL_SIZE_IN_PERCENTS;
         } else {
-            colPosition += cellSize;
+            colPosition += CELL_SIZE_IN_PERCENTS;
         }
     }
 

@@ -42,37 +42,12 @@
 
 .cell {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 12.5%;
+  height: 12.5%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #fff;
-
-  @media screen and (max-width: $desktop-xl) {
-    width: 45px;
-    height: 45px;
-  }
-
-  @media screen and (max-width: $desktop) {
-    width: 56px;
-    height: 56px;
-  }
-
-  @media screen and (max-width: $laptop) {
-    width: 100px;
-    height: 100px;
-  }
-
-  @media screen and (max-width: $tablet) {
-    width: 56px;
-    height: 56px;
-  }
-
-  @media screen and (max-width: $mobile) {
-    width: 36px;
-    height: 36px;
-  }
 }
 
 .cellBlack {
