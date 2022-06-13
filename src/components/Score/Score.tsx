@@ -26,7 +26,7 @@ const Score: React.FC<ScoreProps> = (props): JSX.Element => {
                 {beatenPieces.map((piece) => {
                     const { color, state } = piece;
                     return (
-                        <li>
+                        <li className={styles.beatenPiecesItem}>
                             <Piece
                                 color={color}
                                 state={state}
