@@ -35,6 +35,9 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
         const currentCell = board[cell];
         const { row, col, isBlackCell, piece } = currentCell;
 
+        rowPosition = CELL_SIZE_IN_PERCENTS * row;
+        colPosition = CELL_SIZE_IN_PERCENTS * col;
+
         if (isBlackCell) {
             const isActiveCell = row === currentPiece?.row && col === currentPiece.col;
             cells.push(
@@ -63,13 +66,6 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
                     )}
                 </div>
             );
-        }
-
-        if (currentCell.col >= Math.sqrt(board.length) - 1) {
-            colPosition = 0;
-            rowPosition += CELL_SIZE_IN_PERCENTS;
-        } else {
-            colPosition += CELL_SIZE_IN_PERCENTS;
         }
     }
 
