@@ -1,12 +1,13 @@
 import clsx from "clsx";
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
 import styles from "./Board.module.scss";
 import Piece from "../Piece/Piece";
-import React from "react";
-import {CellProps} from "../../interfaces/interfaces";
+import React, { useMemo } from "react";
+import { CellProps } from "../../interfaces/interfaces";
 import ThemeStore from "../../store/theme/ThemeStore";
-import {Theme} from "../../enums/Theme";
+import { Theme } from "../../enums/Theme";
+import useWindowSize from "../../utils/hooks/useWindowSize";
 
 interface BoardProps {
     board: CellProps[];
@@ -72,12 +73,30 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
         }
     }
 
+    const {
+        height: screenHeight,
+        width: screenWidth,
+    } = useWindowSize();
+
+    const boardSize = useMemo(() => {
+        return screenWidth > screenHeight ?
+            screenHeight : screenWidth;
+    }, [screenWidth, screenHeight]);
+
     return (
-        <div className={clsx(
-            styles.board,
-            {[styles.boardWin95]: themeStore.theme === Theme.Win95},
-        )}>
-            {cells}
+        <div
+            style={{
+                width: boardSize,
+                height: boardSize,
+            }}
+            className={styles.boardWrapper}
+        >
+            <div className={clsx(
+                styles.board,
+                {[styles.boardWin95]: themeStore.theme === Theme.Win95},
+            )}>
+                {cells}
+            </div>
         </div>
     );
 });

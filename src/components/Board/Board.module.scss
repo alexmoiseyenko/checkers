@@ -1,37 +1,33 @@
 @import "src/styles/variables";
 
+.boardWrapper {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
 .board {
   position: relative;
-  width: 800px;
-  height: 800px;
+  width: 80%;
+  height: 80%;
   display: grid;
   background: #fff;
   border: 3px solid #000;
   user-select: none;
 
   @media screen and (max-width: $desktop-xl) {
-    width: 360px;
-    height: 360px;
-  }
-
-  @media screen and (max-width: $desktop) {
-    width: 448px;
-    height: 448px;
-  }
-
-  @media screen and (max-width: $laptop) {
-    width: 800px;
-    height: 800px;
+    width: 70%;
+    height: 70%;
   }
 
   @media screen and (max-width: $tablet) {
-    width: 448px;
-    height: 448px;
+    width: 70%;
+    height: 70%;
   }
 
   @media screen and (max-width: $mobile) {
-    width: 288px;
-    height: 288px;
+    width: 78%;
+    height: 78%;
     margin: 0;
   }
 }
@@ -110,6 +106,14 @@ ul {
 
 .title {
   width: 100%;
+
+  @media screen and (max-width: $laptop) {
+    margin-top: 0;
+  }
+
+  @media screen and (max-width: $mobile) {
+    font-size: 18px;
+  }
 }
 
 
