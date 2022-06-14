@@ -50,6 +50,39 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
     const [activeSide, setActiveSide] = useState<PieceColor>(PieceColor.White);
     const [mustBeatAgain, setMustBeatAgain] = useState<boolean>(false);
 
+    const processBeatPiece = useCallback((selectedPiece: CellProps, currentPiece: CellProps): void => {
+        const commonParams = {
+            board,
+            currentPiece,
+            selectedPiece,
+        };
+
+        const newBoard = beatPiece(
+            commonParams,
+            beatByWhite,
+            beatByBlack,
+            mustBeatAgain,
+        );
+
+        setBoard(newBoard);
+        setUpdateBoard(!updateBoard);
+
+        const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
+
+        if (canBeat) {
+            setMustBeatAgain(true);
+            setCurrentPiece({
+                ...selectedPiece,
+                piece: currentPiece.piece
+            });
+        } else {
+            setMustBeatAgain(false);
+            setCurrentPiece(null);
+
+            switchSide(activeSide, setActiveSide);
+        }
+    }, [activeSide, beatByBlack, beatByWhite, board, mustBeatAgain, updateBoard]);
+
     useEffect(() => {
         for (let i = 0; i < board.length; i++) {
             const currentPiece = board[i];
@@ -70,110 +103,33 @@ const Game: React.FC<GameProps> = observer((props): JSX.Element => {
             if (shouldSetPieceActive) {
                 setCurrentPiece(selectedPiece);
             } else if (currentPiece && canBeat(currentPiece, selectedPiece, board)) {
-                setMustBeatAgain(false);
-
-                const commonParams = {
-                    board,
-                    currentPiece,
-                    selectedPiece,
-                };
-
-                const newBoard = beatPiece(
-                    commonParams,
-                    beatByWhite,
-                    beatByBlack,
-                    mustBeatAgain,
-                );
-
-                setBoard(newBoard);
-                setUpdateBoard(!updateBoard);
-
-                const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
-
-                if (canBeat) {
-                    setMustBeatAgain(true);
-                    setCurrentPiece({
-                        ...selectedPiece,
-                        piece: currentPiece.piece
-                    });
-                } else {
-                    setCurrentPiece(null);
-
-                    switchSide(activeSide, setActiveSide);
-                }
+                processBeatPiece(selectedPiece, currentPiece);
             }
         } else if (selectedPiece.piece && !currentPiece) {
             if (selectedPiece.piece.color === activeSide) {
                 setCurrentPiece(selectedPiece);
             }
-        } else if (selectedPiece.isBlackCell && currentPiece) {
-            const commonParams = {
-                board,
-                currentPiece,
-                selectedPiece,
-            };
-
+        } else if (currentPiece) {
             if (isMinePiece(selectedPiece, currentPiece)) {
                 if (isSamePiece(selectedPiece, currentPiece)) {
                     setCurrentPiece(null);
                 } else {
                     setCurrentPiece(selectedPiece);
                 }
-            } else if (mustBeatAgain) {
-                if (canBeat(currentPiece, selectedPiece, board)) {
-                    setMustBeatAgain(false);
-                    const newBoard = beatPiece(
-                        commonParams,
-                        beatByWhite,
-                        beatByBlack,
-                        mustBeatAgain,
-                    );
-
-                    setBoard(newBoard);
-                    setUpdateBoard(!updateBoard);
-
-                    const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
-
-                    if (canBeat) {
-                        setMustBeatAgain(true);
-                        setCurrentPiece({
-                            ...selectedPiece,
-                            piece: currentPiece.piece
-                        });
-                    } else {
-                        setCurrentPiece(null);
-
-                        switchSide(activeSide, setActiveSide);
-                    }
-                }
             } else if (canMove(currentPiece, selectedPiece, board, activeSide)) {
+                const commonParams = {
+                    board,
+                    currentPiece,
+                    selectedPiece,
+                };
+
                 const updatedBoard = movePiece(commonParams);
                 setBoard(updatedBoard);
                 setCurrentPiece(null);
                 setUpdateBoard(!updateBoard);
                 switchSide(activeSide, setActiveSide);
             } else if (canBeat(currentPiece, selectedPiece, board)) {
-                const newBoard = beatPiece(
-                    commonParams,
-                    beatByWhite,
-                    beatByBlack,
-                );
-
-                setBoard(newBoard);
-                setUpdateBoard(!updateBoard);
-
-                const canBeat = canBeatPieceAgain(selectedPiece, newBoard);
-
-                if (canBeat) {
-                    setMustBeatAgain(true);
-                    setCurrentPiece({
-                        ...selectedPiece,
-                        piece: currentPiece.piece
-                    });
-                } else {
-                    setCurrentPiece(null);
-                    switchSide(activeSide, setActiveSide);
-                }
+                processBeatPiece(selectedPiece, currentPiece);
             }
         }
     }, [activeSide, updateBoard, board, currentPiece, mustBeatAgain]);
