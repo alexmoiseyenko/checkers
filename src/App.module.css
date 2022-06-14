@@ -1,0 +1,11 @@
+.App {
+  position: relative;
+  height: 100vh;
+  text-align: center;
+  background: #e9d8f2;
+  background-size: cover;
+}
+
+.AppWin95 {
+  background-color: #367F7C;
+}

@@ -1,0 +1,27 @@
+@import "src/styles/variables";
+
+.score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    @media screen and (max-width: $tablet) {
+        text-align: left;
+    }
+}
+
+.beatenPieces {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    @media screen and (max-width: $tablet){
+        grid-template-columns: repeat(12, 1fr);
+    }
+}
+
+.beatenPiecesItem {
+    width: 80px;
+    height: 80px;
+}

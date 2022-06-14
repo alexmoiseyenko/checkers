@@ -1,26 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styles from './App.module.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import Game from "./components/Board/Game";
+import ThemeStore from "./store/theme/ThemeStore";
+import {observer} from "mobx-react-lite";
+import clsx from "clsx";
+import {Theme} from "./enums/Theme";
+import GameStore from "./store/game/GameStore";
+
+const themeStore = new ThemeStore();
+const gameStore = new GameStore();
+
+const App = observer(() => {
+    const { theme } = themeStore;
+    return (
+        <div className={clsx(
+            styles.App,
+            {[ styles.AppWin95]: theme === Theme.Win95 }
+        )}>
+            <Game
+                themeStore={themeStore}
+                gameStore={gameStore}
+            />
+        </div>
+    );
+});
 
 export default App;

@@ -1,0 +1,37 @@
+@import "src/styles/variables";
+
+.piece {
+  width: 60%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+.pieceWhite {
+  background: #fff;
+  border: 2px solid #000;
+}
+
+.win95Theme {
+  &.pieceWhite {
+    background: #ba0000;
+  }
+}
+
+.pieceBorder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  height: 65%;
+  width: 65%;
+}
+
+.pieceBorderWhite {
+  border: 2px solid #000;
+}
