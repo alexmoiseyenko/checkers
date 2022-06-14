@@ -13,6 +13,7 @@
   display: grid;
   background: #fff;
   border: 3px solid #000;
+  box-sizing: border-box;
   user-select: none;
 
   @media screen and (max-width: $mobile) {
