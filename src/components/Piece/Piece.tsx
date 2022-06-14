@@ -26,7 +26,7 @@ const Piece: React.FC<PiecePropsWithStore> = observer((props): JSX.Element => {
                 {[styles.pieceBorderWhite]: color === PieceColor.White},
             )}>
                 {state === PieceState.King && (
-                    <Crown width={30} height={30} fill={color === PieceColor.Black ? "#fff" : "#000"} />
+                    <Crown width={20} height={20} fill={color === PieceColor.Black ? "#fff" : "#000"} />
                 )}
             </div>
         </div>
