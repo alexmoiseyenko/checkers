@@ -8,6 +8,11 @@ import { CellProps } from "../../interfaces/interfaces";
 import ThemeStore from "../../store/theme/ThemeStore";
 import { Theme } from "../../enums/Theme";
 import useWindowSize from "../../utils/hooks/useWindowSize";
+import {
+    MOBILE_TOP_CONTENT_SIZE_IN_PIXELS, SIDE_CONTENT_SIZE_IN_PIXELS,
+    TOP_CONTENT_SIZE_IN_PIXELS
+} from "../../utils/consts/board";
+import { SCREEN_SIZE } from "../../utils/consts/consts";
 
 interface BoardProps {
     board: CellProps[];
@@ -75,8 +80,22 @@ const Board: React.FC<BoardProps> = observer((props): JSX.Element => {
     } = useWindowSize();
 
     const boardSize = useMemo(() => {
-        return screenWidth > screenHeight ?
-            screenHeight : screenWidth;
+        const isLaptopPlusSize = screenWidth > SCREEN_SIZE.laptop;
+        const isWidthBiggerThanHeight = screenWidth > screenHeight;
+
+        return isLaptopPlusSize ? (
+            isWidthBiggerThanHeight ? (
+                screenHeight - TOP_CONTENT_SIZE_IN_PIXELS
+            ) : (
+                screenWidth - SIDE_CONTENT_SIZE_IN_PIXELS
+            )
+        ) : (
+            isWidthBiggerThanHeight ? (
+                screenHeight - MOBILE_TOP_CONTENT_SIZE_IN_PIXELS
+            ) : (
+                screenWidth - MOBILE_TOP_CONTENT_SIZE_IN_PIXELS
+            )
+        );
     }, [screenWidth, screenHeight]);
 
     return (
